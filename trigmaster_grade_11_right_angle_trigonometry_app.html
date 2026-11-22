@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrigMaster — Grade 11 Right-Angle Trigonometry</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .font-math {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Crisp Stacked Vertical Fraction Styling */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 0.22rem;
+      line-height: 1.15;
+    }
+    .frac > .num {
+      border-bottom: 2px solid currentColor;
+      padding: 0 0.32rem 0.12rem;
+      display: block;
+      text-align: center;
+    }
+    .frac > .den {
+      padding: 0.12rem 0.32rem 0;
+      display: block;
+      text-align: center;
+    }
+    /* Diagonal Red Cancellation Slash for Cross-Multiply & Divide */
+    .cancel-red {
+      position: relative;
+      display: inline-block;
+      padding: 0 3px;
+      color: #64748b;
+    }
+    .cancel-red::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      top: 50%;
+      height: 2.5px;
+      background-color: #ef4444;
+      transform: rotate(-18deg);
+      border-radius: 2px;
+      pointer-events: none;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade {
+      animation: fadeSlide 0.22s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- =====================================================================
+       1. TOP HEADER & GLOBAL DEG / RAD TOGGLE
+       ===================================================================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200 font-extrabold text-lg">
+          <svg viewBox="0 0 28 28" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.4">
+            <polygon points="4,23 24,23 4,5" stroke-linejoin="round" />
+            <polyline points="4,18 9,18 9,23" stroke-width="1.8" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 leading-none">
+            Trig<span class="text-indigo-600">Master</span>
+          </h1>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Right-Angle Trigonometry Helper • Grade 11 Precalculus</p>
+        </div>
+      </div>
+
+      <!-- Global DEG / RAD Mode Toggle -->
+      <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <span class="text-xs font-semibold text-slate-500 pl-2 hidden sm:inline">Angle Mode:</span>
+        <button type="button" id="btnModeDeg" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-sm transition cursor-pointer">
+          DEG (°)
+        </button>
+        <button type="button" id="btnModeRad" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer">
+          RAD
+        </button>
+      </div>
+    </div>
+
+    <!-- Bright Warning Banner when RAD is active -->
+    <div id="radWarningBanner" class="hidden bg-amber-500 text-white px-4 py-2 text-xs sm:text-sm font-bold text-center shadow-inner">
+      ⚠️ Warning: Radian Mode (RAD) is ON! Grade 11 right-triangle problems usually use Degrees (DEG).
+    </div>
+
+    <!-- 4 Navigation Tabs -->
+    <nav class="max-w-6xl mx-auto px-4 pt-1 pb-2.5 overflow-x-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 min-w-[300px]">
+        <button type="button" data-tab="solver" class="nav-tab active-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition cursor-pointer text-center">
+          1. Solver
+        </button>
+        <button type="button" data-tab="elev" class="nav-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+          2. Elevation &amp; Depression
+        </button>
+        <button type="button" data-tab="learn" class="nav-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+          3. Learn
+        </button>
+        <button type="button" data-tab="practice" class="nav-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+          4. Practice
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =====================================================================
+       MAIN CONTENT CONTAINER
+       ===================================================================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- ===================================================================
+         TAB 1: 1-GOAL CLEAN SOLVER
+         =================================================================== -->
+    <section id="tab-solver" class="tab-panel space-y-6 animate-fade">
+      <!-- Mode Toggle + Presets Bar -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Step 0 • Pick Your 1 Goal</span>
+            <h2 class="text-lg font-extrabold text-slate-900">What are you trying to find?</h2>
+          </div>
+          <!-- Mode Switch Buttons -->
+          <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+            <button type="button" id="btnGoalSide" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow transition cursor-pointer">
+              Find a Missing Side (x)
+            </button>
+            <button type="button" id="btnGoalAngle" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer">
+              Find a Missing Angle (θ)
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Universal Presets -->
+        <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500">Try an Example:</span>
+          <button type="button" data-preset="kite" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer">
+            Kite String (40°, Hyp = 60, Find Opp)
+          </button>
+          <button type="button" data-preset="ladder" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer">
+            Ladder Ramp (63°, Opp = 200, Find Hyp)
+          </button>
+          <button type="button" data-preset="ramp" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer">
+            Shadow Length (35°, Adj = 10, Find Opp)
+          </button>
+          <button type="button" data-preset="angle" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition cursor-pointer">
+            Find Ramp Angle (Opp = 6, Hyp = 10)
+          </button>
+        </div>
+      </div>
+
+      <!-- Solver Workspace Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- LEFT COLUMN: Inputs & Live Triangle Diagram -->
+        <div class="lg:col-span-5 space-y-5">
+          <!-- Input Card -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-700">Enter Your 2 Known Numbers</h3>
+
+            <!-- INPUTS FOR FINDING A MISSING SIDE (x) -->
+            <div id="solverInputsSide" class="space-y-3.5">
+              <div>
+                <label for="inputRefAngle" class="block text-xs font-bold text-slate-700 mb-1">
+                  Reference Angle (θ) in degrees
+                </label>
+                <input type="number" id="inputRefAngle" value="40" step="any" min="0.1" max="89.9"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none font-math text-sm font-bold" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="selectKnownSide" class="block text-xs font-bold text-slate-700 mb-1">Known Side</label>
+                  <select id="selectKnownSide" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white focus:border-indigo-500 outline-none text-xs font-bold">
+                    <option value="O">Opposite (O)</option>
+                    <option value="A">Adjacent (A)</option>
+                    <option value="H" selected>Hypotenuse (H)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="inputKnownVal" class="block text-xs font-bold text-slate-700 mb-1">Known Side Length</label>
+                  <input type="number" id="inputKnownVal" value="60" step="any" min="0.01"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none font-math text-sm font-bold" />
+                </div>
+              </div>
+
+              <div>
+                <label for="selectTargetSide" class="block text-xs font-bold text-slate-700 mb-1">Side to Find (x)</label>
+                <select id="selectTargetSide" class="w-full px-3 py-2.5 rounded-xl border border-indigo-300 bg-indigo-50/60 text-indigo-950 focus:border-indigo-500 outline-none text-xs font-bold">
+                  <option value="O" selected>Opposite (O)</option>
+                  <option value="A">Adjacent (A)</option>
+                  <option value="H">Hypotenuse (H)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- INPUTS FOR FINDING A MISSING ANGLE (θ) -->
+            <div id="solverInputsAngle" class="hidden space-y-3.5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="selectAngSide1" class="block text-xs font-bold text-slate-700 mb-1">First Known Side</label>
+                  <select id="selectAngSide1" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white focus:border-indigo-500 outline-none text-xs font-bold">
+                    <option value="O" selected>Opposite (O)</option>
+                    <option value="A">Adjacent (A)</option>
+                    <option value="H">Hypotenuse (H)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="inputAngVal1" class="block text-xs font-bold text-slate-700 mb-1">First Side Length</label>
+                  <input type="number" id="inputAngVal1" value="5" step="any" min="0.01"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none font-math text-sm font-bold" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="selectAngSide2" class="block text-xs font-bold text-slate-700 mb-1">Second Known Side</label>
+                  <select id="selectAngSide2" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white focus:border-indigo-500 outline-none text-xs font-bold">
+                    <option value="O">Opposite (O)</option>
+                    <option value="A">Adjacent (A)</option>
+                    <option value="H" selected>Hypotenuse (H)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="inputAngVal2" class="block text-xs font-bold text-slate-700 mb-1">Second Side Length</label>
+                  <input type="number" id="inputAngVal2" value="10" step="any" min="0.01"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none font-math text-sm font-bold" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic SVG Right Triangle Diagram -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-slate-800">Labeled Right Triangle</h3>
+              <div class="flex items-center gap-2 text-[11px] font-bold">
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">o (Opp)</span>
+                <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800">a (Adj)</span>
+                <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800">h (Hyp)</span>
+              </div>
+            </div>
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+              <svg id="solverTriangleSvg" viewBox="0 0 380 250" class="w-full h-auto select-none"></svg>
+            </div>
+            <p class="text-[11px] text-slate-500 text-center">
+              Stand at angle <strong>θ</strong>: <span class="text-emerald-700 font-bold">o</span> is across, <span class="text-blue-700 font-bold">a</span> is touching, and <span class="text-purple-700 font-bold">h</span> is across from the 90° box.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Formula Picker & PowerPoint 5-Step Solution -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- Validation Mistake Card -->
+          <div id="solverErrorCard" class="hidden bg-rose-50 border-2 border-rose-300 rounded-2xl p-5 space-y-2">
+            <div class="flex items-center gap-2 text-rose-800 font-extrabold text-base">
+              <span>❌ Impossible Right Triangle — Here Is Why:</span>
+            </div>
+            <p id="solverErrorMsg" class="text-sm text-rose-900 leading-relaxed"></p>
+          </div>
+
+          <!-- Valid Solution Wrapper -->
+          <div id="solverValidWrapper" class="space-y-5">
+            <!-- SOH-CAH-TOA Formula Picker Box -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-700">SOH-CAH-TOA Formula Picker</h3>
+                <span id="formulaReasonBadge" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200"></span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2.5">
+                <!-- SOH Card -->
+                <div id="cardSOH" class="p-3 rounded-xl border-2 text-center transition">
+                  <div class="text-xs font-extrabold tracking-wider">SOH</div>
+                  <div class="font-math text-xs sm:text-sm font-bold mt-1">
+                    sin(θ) = <span class="frac"><span class="num">o</span><span class="den">h</span></span>
+                  </div>
+                </div>
+                <!-- CAH Card -->
+                <div id="cardCAH" class="p-3 rounded-xl border-2 text-center transition">
+                  <div class="text-xs font-extrabold tracking-wider">CAH</div>
+                  <div class="font-math text-xs sm:text-sm font-bold mt-1">
+                    cos(θ) = <span class="frac"><span class="num">a</span><span class="den">h</span></span>
+                  </div>
+                </div>
+                <!-- TOA Card -->
+                <div id="cardTOA" class="p-3 rounded-xl border-2 text-center transition">
+                  <div class="text-xs font-extrabold tracking-wider">TOA</div>
+                  <div class="font-math text-xs sm:text-sm font-bold mt-1">
+                    tan(θ) = <span class="frac"><span class="num">o</span><span class="den">a</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PowerPoint-Style 5-Step Walkthrough -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div>
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Lesson Walkthrough</span>
+                  <h3 class="text-lg font-extrabold text-slate-900">5-Step Solution</h3>
+                </div>
+                <div id="finalAnswerPill" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-math text-base sm:text-lg font-extrabold shadow-sm">
+                  x ≈ 38.6
+                </div>
+              </div>
+
+              <div id="pptStepsContainer" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 2: ELEVATION & DEPRESSION VISUALIZER
+         =================================================================== -->
+    <section id="tab-elev" class="hidden tab-panel space-y-6 animate-fade">
+      <!-- Plain-English Top Banner -->
+      <div class="bg-indigo-600 text-white rounded-2xl p-5 shadow-md space-y-2">
+        <h2 class="text-lg sm:text-xl font-extrabold">Looking UP (Elevation) vs. Looking DOWN (Depression)</h2>
+        <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+          Imagine you are at the bottom looking <strong>UP</strong> at a friend at the top of a lighthouse, while your friend looks straight out at the horizon and tilts their eyes <strong>DOWN</strong> to look at you. Because you are both looking along the <strong>exact same straight line of sight</strong>, the <strong>Angle of Elevation</strong> and the <strong>Angle of Depression</strong> are <strong>ALWAYS the exact same number</strong>!
+        </p>
+      </div>
+
+      <!-- Controls & Interactive Scene -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Controls (Scene, Mode, Goal, Inputs + Synced Sliders) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <!-- Scene Toggle Buttons -->
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">1. Pick a Scene</label>
+            <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+              <button type="button" id="btnSceneLighthouse" class="px-3 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow transition cursor-pointer">
+                🗼 Lighthouse &amp; Boat
+              </button>
+              <button type="button" id="btnSceneLadder" class="px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer">
+                🪜 Ladder Against Wall
+              </button>
+            </div>
+          </div>
+
+          <!-- Looking UP vs Looking DOWN -->
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">2. Viewpoint Direction</label>
+            <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+              <button type="button" id="btnViewElevation" class="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow transition cursor-pointer">
+                ↗ Angle of Elevation (Looking UP)
+              </button>
+              <button type="button" id="btnViewDepression" class="px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer">
+                ↘ Angle of Depression (Looking DOWN)
+              </button>
+            </div>
+          </div>
+
+          <!-- Goal Selector -->
+          <div>
+            <label for="selectElevGoal" class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">3. What do you want to find?</label>
+            <select id="selectElevGoal" class="w-full px-3.5 py-2.5 rounded-xl border border-indigo-300 bg-indigo-50/70 text-indigo-950 font-bold text-xs sm:text-sm outline-none">
+              <option value="height" selected>Find Vertical Height (Opposite)</option>
+              <option value="distance">Find Ground Distance (Adjacent)</option>
+              <option value="angle">Find Angle θ (Elevation / Depression)</option>
+            </select>
+          </div>
+
+          <!-- Synced Numeric Inputs & Range Sliders -->
+          <div class="space-y-3.5 pt-2 border-t border-slate-100">
+            <!-- Height Control -->
+            <div id="ctrlElevHeight" class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="numElevHeight" class="text-xs font-bold text-slate-700">Height (m)</label>
+                <input type="number" id="numElevHeight" value="25" min="1" max="500" step="any"
+                  class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-math text-xs font-bold text-right" />
+              </div>
+              <input type="range" id="sliderElevHeight" min="5" max="100" value="25" class="w-full accent-indigo-600 cursor-pointer" />
+            </div>
+
+            <!-- Ground Distance Control -->
+            <div id="ctrlElevDist" class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="numElevDist" class="text-xs font-bold text-slate-700">Ground Distance (m)</label>
+                <input type="number" id="numElevDist" value="40" min="1" max="500" step="any"
+                  class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-math text-xs font-bold text-right" />
+              </div>
+              <input type="range" id="sliderElevDist" min="5" max="120" value="40" class="w-full accent-indigo-600 cursor-pointer" />
+            </div>
+
+            <!-- Angle Control -->
+            <div id="ctrlElevAngle" class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="numElevAngle" class="text-xs font-bold text-slate-700">Angle θ (°)</label>
+                <input type="number" id="numElevAngle" value="32" min="1" max="89" step="any"
+                  class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-math text-xs font-bold text-right" />
+              </div>
+              <input type="range" id="sliderElevAngle" min="5" max="80" value="32" class="w-full accent-indigo-600 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive SVG Scene + PowerPoint 5-Step Solution -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 id="elevSceneTitle" class="text-sm font-extrabold text-slate-800">Interactive Scene: Lighthouse &amp; Boat</h3>
+              <span id="elevEqualBadge" class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 text-xs font-bold">
+                Elevation θ = Depression θ
+              </span>
+            </div>
+            <div class="bg-sky-50/70 rounded-xl border border-slate-200 p-2">
+              <svg id="elevSceneSvg" viewBox="0 0 460 250" class="w-full h-auto select-none"></svg>
+            </div>
+          </div>
+
+          <!-- 5-Step Solution for Elevation/Depression -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+              <h3 class="text-base font-extrabold text-slate-900">Step-by-Step Solution</h3>
+              <span id="elevAnswerPill" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-math text-sm font-extrabold"></span>
+            </div>
+            <div id="elevStepsContainer" class="space-y-2.5"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 3: LEARN TAB (CONCEPT & 4 KEY IDEAS)
+         =================================================================== -->
+    <section id="tab-learn" class="hidden tab-panel space-y-6 animate-fade">
+      <!-- Header Definition Card -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-3">
+        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase tracking-wider">Core Concept</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">What is Right-Angle Trigonometry?</h2>
+        <p class="text-sm text-slate-700 leading-relaxed">
+          <strong>Right-angle trigonometry</strong> is the math toolkit that connects the <strong>angles</strong> and <strong>side lengths</strong> of any triangle with a <strong>90° right corner</strong>. If you know just <strong>2 pieces of information</strong> (one side + one angle, or two sides), you can find any missing side or missing angle!
+        </p>
+        <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-950">
+          <strong>What does θ ("theta") mean?</strong> Don't let the Greek symbol <strong>θ</strong> scare you—it is just a nickname for a <strong>missing angle</strong>, the exact same way we use <strong>x</strong> for a missing side!
+        </div>
+      </div>
+
+      <!-- 4 Key Idea Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- IDEA 1: Labeling o, a, and h (Vertices A, b, c) -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Idea 1</span>
+              <button type="button" id="btnFlipLearnSvg" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer">
+                🔄 Switch Corner: Stand at b ↔ Stand at c
+              </button>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900">Labeling Sides (o, a, h)</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              In right triangle <strong>A-b-c</strong> (with the 90° box at corner <strong>A</strong>), stand at your active corner:
+            </p>
+            <ul class="text-xs space-y-1.5 text-slate-700">
+              <li><strong class="text-purple-700">• h (Hypotenuse):</strong> Always the longest slanted side across from the 90° box (A). It never moves.</li>
+              <li><strong class="text-emerald-700">• o (Opposite):</strong> Directly across the triangle from where you are standing.</li>
+              <li><strong class="text-blue-700">• a (Adjacent):</strong> Right next to your corner (touching it).</li>
+            </ul>
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+              <svg id="learnSvg1" viewBox="0 0 320 185" class="w-full h-auto"></svg>
+            </div>
+            <div id="learnRatioWorked" class="p-3 rounded-xl bg-indigo-50/70 border border-indigo-200 font-math text-xs text-indigo-950 flex items-center justify-between">
+              <span>Standing at corner <strong>b</strong>:</span>
+              <span class="font-bold">sin(b) = <span class="frac"><span class="num">o</span><span class="den">h</span></span> = <span class="frac"><span class="num">6</span><span class="den">10</span></span></span>
+            </div>
+          </div>
+          <button type="button" data-preset="kite" class="learn-try-btn w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer">
+            Try it in the Solver →
+          </button>
+        </div>
+
+        <!-- IDEA 2: SOH-CAH-TOA: Picking the Right Rule -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase">Idea 2</span>
+              <span class="text-xs font-bold text-slate-400">2-Side Matching Rule</span>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900">Choosing SOH, CAH, or TOA</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Ignore the blank side you don't have and don't need. Look at the <strong>2 sides with numbers or x</strong>, and pick the only rule that uses both:
+            </p>
+            <div class="space-y-2.5 font-math text-xs">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span class="font-extrabold text-indigo-700">SOH</span>
+                  <span class="font-sans text-slate-600 ml-2">Have <strong>o</strong> and <strong>h</strong></span>
+                </div>
+                <span class="font-bold">sin(θ) = <span class="frac"><span class="num">o</span><span class="den">h</span></span></span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span class="font-extrabold text-indigo-700">CAH</span>
+                  <span class="font-sans text-slate-600 ml-2">Have <strong>a</strong> and <strong>h</strong></span>
+                </div>
+                <span class="font-bold">cos(θ) = <span class="frac"><span class="num">a</span><span class="den">h</span></span></span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span class="font-extrabold text-indigo-700">TOA</span>
+                  <span class="font-sans text-slate-600 ml-2">Have <strong>o</strong> and <strong>a</strong></span>
+                </div>
+                <span class="font-bold">tan(θ) = <span class="frac"><span class="num">o</span><span class="den">a</span></span></span>
+              </div>
+            </div>
+          </div>
+          <button type="button" data-preset="ramp" class="learn-try-btn w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer">
+            Try it in the Solver →
+          </button>
+        </div>
+
+        <!-- IDEA 3: x on Top vs. x on Bottom (Cross-Multiply & Cancel) -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 text-xs font-extrabold uppercase">Idea 3</span>
+              <span class="text-xs font-bold text-rose-600">#1 Algebra Trap!</span>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900">x on Top vs. x on Bottom</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <!-- x on Top -->
+              <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-2">
+                <div class="font-extrabold text-emerald-900">x on TOP → Multiply</div>
+                <div class="font-math space-y-1.5 text-slate-800">
+                  <div>tan(35°) = <span class="frac"><span class="num">x</span><span class="den">10</span></span></div>
+                  <div>x = 10 · tan(35°)</div>
+                  <div class="font-bold text-emerald-700">x ≈ 7.0</div>
+                </div>
+              </div>
+              <!-- x on Bottom -->
+              <div class="p-3 rounded-xl bg-rose-50/70 border border-rose-200 space-y-2">
+                <div class="font-extrabold text-rose-900">x on BOTTOM → Cross &amp; Divide</div>
+                <div class="font-math space-y-1.5 text-slate-800">
+                  <div><span class="frac"><span class="num">sin(35°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">12</span><span class="den">x</span></span></div>
+                  <div><span class="frac"><span class="num">x · <span class="cancel-red">sin(35°)</span></span><span class="den"><span class="cancel-red">sin(35°)</span></span></span> = <span class="frac"><span class="num">12</span><span class="den">sin(35°)</span></span></div>
+                  <div class="font-bold text-rose-700">x = <span class="frac"><span class="num">12</span><span class="den">sin(35°)</span></span> ≈ 20.9</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" data-preset="ladder" class="learn-try-btn w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer">
+            Try it in the Solver →
+          </button>
+        </div>
+
+        <!-- IDEA 4: Finding a Missing Angle (Why We Use Inverse Trig) -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-800 text-xs font-extrabold uppercase">Idea 4</span>
+              <span class="text-xs font-bold text-slate-400">Inverse Trig</span>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900">Finding a Missing Angle (Why We Use Inverse Trig)</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              When you know <strong>2 sides</strong> and want the angle inside, press <strong>2nd</strong> (or <strong>Shift</strong>) to use the <strong>inverse sine (sin<sup>-1</sup>)</strong>, <strong>inverse cosine (cos<sup>-1</sup>)</strong>, or <strong>inverse tangent (tan<sup>-1</sup>)</strong>:
+            </p>
+            <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-950 leading-relaxed">
+              <strong>Why do we use inverse trig?</strong> Because the missing angle <strong>θ</strong> is trapped inside sin(θ), cos(θ), or tan(θ), and you <strong>CANNOT divide by the word "sin"</strong> (since sin is a function, not a number). Using the <strong>inverse sine (sin<sup>-1</sup>)</strong>, <strong>inverse cosine (cos<sup>-1</sup>)</strong>, or <strong>inverse tangent (tan<sup>-1</sup>)</strong> acts like an <strong>"undo" button</strong>—just like subtraction undoes addition—to free the angle θ!
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 font-math text-xs space-y-2">
+              <div class="text-slate-700">Example: Opposite = 5, Hypotenuse = 10</div>
+              <div>Step 1 (SOH): sin(θ) = <span class="frac"><span class="num">5</span><span class="den">10</span></span></div>
+              <div>Step 2 (Use the inverse sine): θ = sin<sup>-1</sup>(<span class="frac"><span class="num">5</span><span class="den">10</span></span>)</div>
+              <div class="font-bold text-indigo-700">Step 3 (DEG mode): θ = 30°</div>
+            </div>
+          </div>
+          <button type="button" data-preset="angle" class="learn-try-btn w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer">
+            Try it in the Solver →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 4: PRACTICE TAB (4 PRACTICE MODES + PROGRESSIVE HINTS + CODE BREAKER)
+         =================================================================== -->
+    <section id="tab-practice" class="hidden tab-panel space-y-6 animate-fade">
+      <!-- Mode Selector & Score Header -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Mastery Practice</span>
+            <h2 class="text-lg font-extrabold text-slate-900">Choose a Practice Mode</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-extrabold text-emerald-800">
+              Streak: <span id="practiceStreak">0</span> 🔥
+            </div>
+            <div class="px-3.5 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-extrabold text-indigo-800">
+              Solved: <span id="practiceSolved">0</span> ✓
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Practice Mode Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          <button type="button" data-pmode="basic" id="pmode-basic" class="pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow transition cursor-pointer text-center">
+            1. Missing Side (Easy &amp; Core)
+          </button>
+          <button type="button" data-pmode="swap" id="pmode-swap" class="pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+            2. Missing Angle (Inverse Trig)
+          </button>
+          <button type="button" data-pmode="word" id="pmode-word" class="pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+            3. Real-Life Word Problems
+          </button>
+          <button type="button" data-pmode="ratio" id="pmode-ratio" class="pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center">
+            4. Write Ratio (sin b)
+          </button>
+        </div>
+      </div>
+
+      <!-- SUB-MODES 1, 2, 3: NUMERIC PRACTICE WORKSPACE -->
+      <div id="practice-sub-numeric" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Triangle Diagram -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-3">
+          <div class="flex items-center justify-between">
+            <span id="practiceLevelBadge" class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800 text-xs font-extrabold">Level 1 • Basic</span>
+            <span class="text-xs font-bold text-slate-400">Round to nearest tenth</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+            <svg id="practiceSvg" viewBox="0 0 360 245" class="w-full h-auto select-none"></svg>
+          </div>
+          <p class="text-[11px] text-slate-500 text-center">Make sure your calculator is in <strong>DEG</strong> mode!</p>
+        </div>
+
+        <!-- Right: Question, Answer Input, Progressive 3-Step Hints & Smart Feedback -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <h3 id="practicePrompt" class="text-base sm:text-lg font-bold text-slate-900 leading-snug"></h3>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div class="relative flex-1">
+              <input type="number" id="practiceInput" step="any" placeholder="Enter answer (nearest tenth)"
+                class="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:border-indigo-500 outline-none text-base font-math font-bold" />
+              <span id="practiceUnitHint" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">units</span>
+            </div>
+            <button type="button" id="btnCheckPractice" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow transition cursor-pointer">
+              Check Answer
+            </button>
+          </div>
+
+          <!-- Action Buttons: Get Step Hint + New Question -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <button type="button" id="btnNextHint" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-extrabold border border-amber-300 transition cursor-pointer">
+              💡 Get Step Hint (<span id="hintCounter">0</span>/3)
+            </button>
+            <button type="button" id="btnNextQuestion" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer">
+              Skip / New Question →
+            </button>
+          </div>
+
+          <!-- Progressive Hints Container -->
+          <div id="hintsList" class="space-y-2"></div>
+
+          <!-- Smart Mistake-Catcher Feedback Box -->
+          <div id="practiceFeedback" class="hidden p-4 rounded-xl border-2 text-sm leading-relaxed"></div>
+        </div>
+      </div>
+
+      <!-- SUB-MODE 4: WRITE RATIO (sin b) FROM ALL 3 SIDES -->
+      <div id="practice-sub-ratio" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Labeled Triangle A-b-c -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800 text-xs font-extrabold">Level 4 • Write Ratio</span>
+            <button type="button" id="btnToggleRatioLabels" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer">
+              👁️ Show o, a, h Labels
+            </button>
+          </div>
+          <div class="bg-slate-50 rounded-xl border border-slate-200 p-2">
+            <svg id="ratioSvg" viewBox="0 0 360 245" class="w-full h-auto select-none"></svg>
+          </div>
+          <p class="text-[11px] text-slate-500 text-center">Stand at the marked corner and write <strong>o/h</strong>, <strong>a/h</strong>, or <strong>o/a</strong>.</p>
+        </div>
+
+        <!-- Right: Prompt, Stacked Fraction Input, Stacked Hints & Smart Feedback -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <h3 id="ratioPrompt" class="text-base sm:text-lg font-bold text-slate-900 leading-snug"></h3>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="inline-flex flex-col items-center bg-slate-50 p-3 rounded-xl border-2 border-slate-200">
+              <input type="number" id="ratioInputNum" placeholder="Top" step="any"
+                class="w-24 px-2.5 py-1.5 rounded-lg border-2 border-slate-300 focus:border-indigo-500 outline-none text-center font-math text-base font-bold bg-white" />
+              <div class="w-28 h-0.5 bg-slate-800 my-1.5 rounded"></div>
+              <input type="number" id="ratioInputDen" placeholder="Bottom" step="any"
+                class="w-24 px-2.5 py-1.5 rounded-lg border-2 border-slate-300 focus:border-indigo-500 outline-none text-center font-math text-base font-bold bg-white" />
+            </div>
+            <div class="space-y-1.5">
+              <button type="button" id="btnCheckRatio" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow transition cursor-pointer">
+                Check Fraction
+              </button>
+              <div class="text-[11px] font-bold text-slate-400">Enter numerator on top, denominator on bottom</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <button type="button" id="btnNextRatioHint" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-extrabold border border-amber-300 transition cursor-pointer">
+              💡 Get Step Hint (<span id="ratioHintCounter">0</span>/2)
+            </button>
+            <button type="button" id="btnNextRatio" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer">
+              New Triangle →
+            </button>
+          </div>
+
+          <div id="ratioHintsList" class="space-y-2"></div>
+          <div id="ratioFeedback" class="hidden p-4 rounded-xl border-2 text-sm leading-relaxed"></div>
+        </div>
+      </div>
+
+      <!-- BONUS MINI-GAME: CODE BREAKER (TOGGLEABLE SECTION) -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 text-xs font-extrabold uppercase">Bonus Mini-Game</span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">Code Breaker: 4-Triangle Puzzle</h3>
+            <p class="text-xs text-slate-600">Solve each right triangle to the nearest tenth, match your answer in the Code Key (watch out for trap numbers!), and unlock the 4-letter word.</p>
+          </div>
+          <button type="button" id="btnToggleCodeBreaker" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold shadow transition cursor-pointer">
+            Hide Puzzle ▲
+          </button>
+        </div>
+
+        <div id="codeBreakerBody" class="space-y-5 border-t border-slate-100 pt-4">
+          <div class="flex justify-end">
+            <button type="button" id="btnCheckCodeBreaker" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow transition cursor-pointer">
+              🔓 Unlock Word
+            </button>
+          </div>
+
+          <!-- 4 Puzzle Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="codeBreakerCards"></div>
+
+          <!-- Code Key Table -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Code Key (Careful: 3 numbers are common mistake traps!)</div>
+            <div class="grid grid-cols-4 sm:grid-cols-7 gap-2 text-center font-math text-xs">
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">19.2</div><div class="font-extrabold text-indigo-700 text-sm">M</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">32.6</div><div class="font-extrabold text-slate-700 text-sm">R</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">25.7</div><div class="font-extrabold text-indigo-700 text-sm">A</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">12.6</div><div class="font-extrabold text-slate-700 text-sm">K</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">20.8</div><div class="font-extrabold text-indigo-700 text-sm">T</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">5.8</div><div class="font-extrabold text-slate-700 text-sm">S</div></div>
+              <div class="p-2 rounded-lg bg-white border border-slate-200"><div class="text-slate-500">31.9</div><div class="font-extrabold text-indigo-700 text-sm">H</div></div>
+            </div>
+          </div>
+
+          <!-- Secret Word Result Banner -->
+          <div id="codeBreakerResult" class="hidden p-4 rounded-xl border-2 text-center font-bold text-sm"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500">
+    TrigMaster • Built for Grade 11 Precalculus Right-Angle Trigonometry
+  </footer>
+
+  <!-- =====================================================================
+       APPLICATION JAVASCRIPT
+       ===================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = {
+        angleMode: 'DEG',        // 'DEG' or 'RAD'
+        solverGoal: 'side',      // 'side' or 'angle'
+        elevScene: 'lighthouse', // 'lighthouse' or 'ladder'
+        elevView: 'elevation',   // 'elevation' or 'depression'
+        learnFlipped: false,     // false = corner b, true = corner c
+        practiceMode: 'basic',   // 'basic', 'swap', 'word', 'ratio'
+        streak: 0,
+        solved: 0
+      };
+
+      const toRad = (deg) => (deg * Math.PI) / 180;
+      const toDeg = (rad) => (rad * 180) / Math.PI;
+      const round1 = (num) => Math.round(num * 10) / 10;
+      const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+      const sinFn = (val) => (state.angleMode === 'DEG' ? Math.sin(toRad(val)) : Math.sin(val));
+      const cosFn = (val) => (state.angleMode === 'DEG' ? Math.cos(toRad(val)) : Math.cos(val));
+      const tanFn = (val) => (state.angleMode === 'DEG' ? Math.tan(toRad(val)) : Math.tan(val));
+      const asinFn = (ratio) => (state.angleMode === 'DEG' ? toDeg(Math.asin(ratio)) : Math.asin(ratio));
+      const acosFn = (ratio) => (state.angleMode === 'DEG' ? toDeg(Math.acos(ratio)) : Math.acos(ratio));
+      const atanFn = (ratio) => (state.angleMode === 'DEG' ? toDeg(Math.atan(ratio)) : Math.atan(ratio));
+
+      function renderPptSteps(steps, targetId = 'pptStepsContainer') {
+        const container = document.getElementById(targetId);
+        container.innerHTML = steps.map((s) => `
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">
+              ${s.num}
+            </div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <div class="text-xs font-extrabold text-slate-800">${s.title}</div>
+              <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">${s.desc}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // ---------------------------------------------------------------------
+      // 1. GLOBAL DEG/RAD & TOP NAVIGATION TABS
+      // ---------------------------------------------------------------------
+      function setAngleMode(mode) {
+        state.angleMode = mode;
+        const btnDeg = document.getElementById('btnModeDeg');
+        const btnRad = document.getElementById('btnModeRad');
+        const banner = document.getElementById('radWarningBanner');
+
+        if (mode === 'DEG') {
+          btnDeg.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-sm transition cursor-pointer';
+          btnRad.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer';
+          banner.classList.add('hidden');
+        } else {
+          btnRad.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-sm transition cursor-pointer';
+          btnDeg.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer';
+          banner.classList.remove('hidden');
+        }
+        solveMainTriangle();
+        updateElevationVisualizer();
+      }
+
+      document.getElementById('btnModeDeg').addEventListener('click', () => setAngleMode('DEG'));
+      document.getElementById('btnModeRad').addEventListener('click', () => setAngleMode('RAD'));
+
+      function switchTab(tabName) {
+        document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.add('hidden'));
+        document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+        document.querySelectorAll('.nav-tab').forEach((btn) => {
+          if (btn.dataset.tab === tabName) {
+            btn.className = 'nav-tab active-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition cursor-pointer text-center';
+          } else {
+            btn.className = 'nav-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center';
+          }
+        });
+      }
+
+      document.querySelectorAll('.nav-tab').forEach((btn) => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // ---------------------------------------------------------------------
+      // 2. TAB 1: SOLVER
+      // ---------------------------------------------------------------------
+      function setSolverGoal(goal) {
+        state.solverGoal = goal;
+        const btnSide = document.getElementById('btnGoalSide');
+        const btnAngle = document.getElementById('btnGoalAngle');
+        const boxSide = document.getElementById('solverInputsSide');
+        const boxAngle = document.getElementById('solverInputsAngle');
+
+        if (goal === 'side') {
+          btnSide.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow transition cursor-pointer';
+          btnAngle.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+          boxSide.classList.remove('hidden');
+          boxAngle.classList.add('hidden');
+        } else {
+          btnAngle.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow transition cursor-pointer';
+          btnSide.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+          boxAngle.classList.remove('hidden');
+          boxSide.classList.add('hidden');
+        }
+        solveMainTriangle();
+      }
+
+      document.getElementById('btnGoalSide').addEventListener('click', () => setSolverGoal('side'));
+      document.getElementById('btnGoalAngle').addEventListener('click', () => setSolverGoal('angle'));
+
+      function loadSolverPreset(key) {
+        switchTab('solver');
+        if (key === 'kite') {
+          setSolverGoal('side');
+          document.getElementById('inputRefAngle').value = 40;
+          document.getElementById('selectKnownSide').value = 'H';
+          document.getElementById('inputKnownVal').value = 60;
+          document.getElementById('selectTargetSide').value = 'O';
+        } else if (key === 'ladder') {
+          setSolverGoal('side');
+          document.getElementById('inputRefAngle').value = 63;
+          document.getElementById('selectKnownSide').value = 'O';
+          document.getElementById('inputKnownVal').value = 200;
+          document.getElementById('selectTargetSide').value = 'H';
+        } else if (key === 'ramp') {
+          setSolverGoal('side');
+          document.getElementById('inputRefAngle').value = 35;
+          document.getElementById('selectKnownSide').value = 'A';
+          document.getElementById('inputKnownVal').value = 10;
+          document.getElementById('selectTargetSide').value = 'O';
+        } else if (key === 'angle') {
+          setSolverGoal('angle');
+          document.getElementById('selectAngSide1').value = 'O';
+          document.getElementById('inputAngVal1').value = 6;
+          document.getElementById('selectAngSide2').value = 'H';
+          document.getElementById('inputAngVal2').value = 10;
+        }
+        solveMainTriangle();
+      }
+
+      document.querySelectorAll('.preset-btn, .learn-try-btn').forEach((btn) => {
+        btn.addEventListener('click', () => loadSolverPreset(btn.dataset.preset));
+      });
+
+      function highlightFormulaCard(activeRatio, reasonText) {
+        const cards = {
+          SOH: document.getElementById('cardSOH'),
+          CAH: document.getElementById('cardCAH'),
+          TOA: document.getElementById('cardTOA')
+        };
+        Object.entries(cards).forEach(([key, el]) => {
+          if (key === activeRatio) {
+            el.className = 'p-3 rounded-xl border-2 border-indigo-600 bg-indigo-600 text-white text-center shadow-md transition';
+          } else {
+            el.className = 'p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-400 text-center opacity-70 transition';
+          }
+        });
+        document.getElementById('formulaReasonBadge').textContent = reasonText;
+      }
+
+      function drawSolverTriangleSvg({ angleLabel, labelO, labelA, labelH }) {
+        const svg = document.getElementById('solverTriangleSvg');
+        svg.innerHTML = `
+          <polygon points="75,200 305,200 305,50" fill="#eef2ff" stroke="#475569" stroke-width="2" />
+          <polyline points="285,200 285,180 305,180" fill="none" stroke="#64748b" stroke-width="2" />
+          <path d="M 118 200 A 43 43 0 0 0 111 176" fill="none" stroke="#4f46e5" stroke-width="3.2" />
+          <text x="128" y="188" font-size="13" font-weight="800" fill="#4338ca">${angleLabel}</text>
+
+          <line x1="305" y1="50" x2="305" y2="200" stroke="#059669" stroke-width="4" stroke-linecap="round" />
+          <text x="315" y="130" text-anchor="start" font-size="12.5" font-weight="800" fill="#047857">${labelO}</text>
+
+          <line x1="75" y1="200" x2="305" y2="200" stroke="#2563eb" stroke-width="4" stroke-linecap="round" />
+          <text x="190" y="224" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1d4ed8">${labelA}</text>
+
+          <line x1="75" y1="200" x2="305" y2="50" stroke="#7c3aed" stroke-width="4" stroke-linecap="round" />
+          <text x="176" y="112" text-anchor="end" font-size="12.5" font-weight="800" fill="#6d28d9">${labelH}</text>
+        `;
+      }
+
+      function showSolverError(msg) {
+        document.getElementById('solverErrorCard').classList.remove('hidden');
+        document.getElementById('solverValidWrapper').classList.add('hidden');
+        document.getElementById('solverErrorMsg').innerHTML = msg;
+      }
+
+      function solveMainTriangle() {
+        const unitStr = state.angleMode === 'DEG' ? '°' : ' rad';
+        const sideNames = { O: 'Opposite (O)', A: 'Adjacent (A)', H: 'Hypotenuse (H)' };
+
+        if (state.solverGoal === 'side') {
+          const theta = parseFloat(document.getElementById('inputRefAngle').value);
+          const knownType = document.getElementById('selectKnownSide').value;
+          const knownVal = parseFloat(document.getElementById('inputKnownVal').value);
+          const targetType = document.getElementById('selectTargetSide').value;
+
+          if (isNaN(theta) || theta <= 0 || theta >= 90) {
+            return showSolverError('In a right triangle, the reference angle <strong>θ</strong> must be strictly between <strong>0° and 90°</strong> (because the three angles in every triangle add up to 180°, and one corner is already 90°).');
+          }
+          if (isNaN(knownVal) || knownVal <= 0) {
+            return showSolverError('Please enter a positive number greater than <strong>0</strong> for your known side length.');
+          }
+          if (knownType === targetType) {
+            return showSolverError(`You selected <strong>${sideNames[knownType]}</strong> as both your known side and the side to find! Change <strong>Side to Find (x)</strong> to one of the other two sides.`);
+          }
+
+          document.getElementById('solverErrorCard').classList.add('hidden');
+          document.getElementById('solverValidWrapper').classList.remove('hidden');
+
+          const pair = new Set([knownType, targetType]);
+          let ratio = 'SOH', trigWord = 'sin', topType = 'O', botType = 'H';
+          if (pair.has('O') && pair.has('H')) {
+            ratio = 'SOH'; trigWord = 'sin'; topType = 'O'; botType = 'H';
+          } else if (pair.has('A') && pair.has('H')) {
+            ratio = 'CAH'; trigWord = 'cos'; topType = 'A'; botType = 'H';
+          } else {
+            ratio = 'TOA'; trigWord = 'tan'; topType = 'O'; botType = 'A';
+          }
+
+          const xOnTop = targetType === topType;
+          const topExpr = xOnTop ? 'x' : knownVal;
+          const botExpr = xOnTop ? knownVal : 'x';
+          const trigVal = trigWord === 'sin' ? sinFn(theta) : trigWord === 'cos' ? cosFn(theta) : tanFn(theta);
+          const ans = xOnTop ? knownVal * trigVal : knownVal / trigVal;
+
+          const labels = { O: 'o', A: 'a', H: 'h' };
+          labels[knownType] = `${knownType.toLowerCase()} = ${knownVal}`;
+          labels[targetType] = `${targetType.toLowerCase()} = x`;
+          drawSolverTriangleSvg({
+            angleLabel: `${theta}°`,
+            labelO: labels.O,
+            labelA: labels.A,
+            labelH: labels.H
+          });
+
+          highlightFormulaCard(ratio, `Uses ${topType.toLowerCase()} and ${botType.toLowerCase()} → Pick ${ratio}`);
+          document.getElementById('finalAnswerPill').textContent = `x ≈ ${round1(ans)}`;
+
+          let step4Html = '';
+          if (xOnTop) {
+            step4Html = `
+              <div class="space-y-1.5 font-math text-xs sm:text-sm">
+                <div class="text-emerald-700 font-sans font-bold text-xs">✓ x is on TOP → Put 1 underneath &amp; cross-multiply:</div>
+                <div><span class="frac"><span class="num">${trigWord}(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">x</span><span class="den">${knownVal}</span></span></div>
+                <div>x = ${knownVal} · ${trigWord}(${theta}°)</div>
+              </div>
+            `;
+          } else {
+            step4Html = `
+              <div class="space-y-2 font-math text-xs sm:text-sm">
+                <div class="text-rose-700 font-sans font-bold text-xs">⚠️ x is on BOTTOM → Put 1 underneath, cross-multiply &amp; cancel:</div>
+                <div><span class="frac"><span class="num">${trigWord}(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${knownVal}</span><span class="den">x</span></span></div>
+                <div><span class="frac"><span class="num">x · <span class="cancel-red">${trigWord}(${theta}°)</span></span><span class="den"><span class="cancel-red">${trigWord}(${theta}°)</span></span></span> = <span class="frac"><span class="num">${knownVal}</span><span class="den">${trigWord}(${theta}°)</span></span></div>
+                <div>x = <span class="frac"><span class="num">${knownVal}</span><span class="den">${trigWord}(${theta}°)</span></span></div>
+              </div>
+            `;
+          }
+
+          let sanityMsg = `Check: ${round1(ans)} > 0 ✓`;
+          if (targetType === 'H') {
+            sanityMsg = ans > knownVal
+              ? `Check: Hypotenuse (${round1(ans)}) is longer than leg (${knownVal}) ✓`
+              : `Check: In RAD mode this looks smaller than ${knownVal} — switch to DEG mode!`;
+          } else if (knownType === 'H') {
+            sanityMsg = ans < knownVal
+              ? `Check: Leg (${round1(ans)}) is shorter than Hypotenuse (${knownVal}) ✓`
+              : `Check: Leg should be shorter than Hypotenuse (${knownVal})!`;
+          }
+
+          renderPptSteps([
+            {
+              num: 1,
+              title: 'Mark the angle θ & label O, A, H',
+              desc: `Stand at <strong>θ = ${theta}°</strong>. You know <strong>${sideNames[knownType]} = ${knownVal}</strong> and want <strong>${sideNames[targetType]} = x</strong>.`
+            },
+            {
+              num: 2,
+              title: `Choose ${ratio} (${trigWord})`,
+              desc: `Because you have <strong>${topType}</strong> and <strong>${botType}</strong>, use <strong>${ratio}</strong>: <span class="font-math font-bold">${trigWord}(θ) = <span class="frac"><span class="num">${topType}</span><span class="den">${botType}</span></span></span>`
+            },
+            {
+              num: 3,
+              title: 'Substitute your known values',
+              desc: `<div class="font-math text-sm">${trigWord}(${theta}°) = <span class="frac"><span class="num">${topExpr}</span><span class="den">${botExpr}</span></span></div>`
+            },
+            {
+              num: 4,
+              title: xOnTop ? 'Solve for x (x is on TOP → Multiply)' : 'Solve for x (x is on BOTTOM → Cross-Multiply & Cancel)',
+              desc: step4Html
+            },
+            {
+              num: 5,
+              title: 'Round to the nearest tenth & sanity-check',
+              desc: `<div class="font-math text-sm"><strong>x ≈ ${round1(ans)}</strong> &nbsp; <span class="text-xs font-sans text-emerald-700 font-semibold">(${sanityMsg})</span></div>`
+            }
+          ]);
+        } else {
+          const s1Type = document.getElementById('selectAngSide1').value;
+          const s1Val = parseFloat(document.getElementById('inputAngVal1').value);
+          const s2Type = document.getElementById('selectAngSide2').value;
+          const s2Val = parseFloat(document.getElementById('inputAngVal2').value);
+
+          if (isNaN(s1Val) || s1Val <= 0 || isNaN(s2Val) || s2Val <= 0) {
+            return showSolverError('Both side lengths must be positive numbers greater than <strong>0</strong>.');
+          }
+          if (s1Type === s2Type) {
+            return showSolverError(`You picked <strong>${sideNames[s1Type]}</strong> twice! Please pick <strong>two different sides</strong> (for example, Opposite and Hypotenuse).`);
+          }
+
+          const map = { [s1Type]: s1Val, [s2Type]: s2Val };
+          if (map.H !== undefined && map.O !== undefined && map.H <= map.O) {
+            return showSolverError(`The <strong>Hypotenuse (H = ${map.H})</strong> must ALWAYS be the longest side of a right triangle, so it cannot be less than or equal to the <strong>Opposite side (O = ${map.O})</strong>.`);
+          }
+          if (map.H !== undefined && map.A !== undefined && map.H <= map.A) {
+            return showSolverError(`The <strong>Hypotenuse (H = ${map.H})</strong> must ALWAYS be the longest side of a right triangle, so it cannot be less than or equal to the <strong>Adjacent side (A = ${map.A})</strong>.`);
+          }
+
+          document.getElementById('solverErrorCard').classList.add('hidden');
+          document.getElementById('solverValidWrapper').classList.remove('hidden');
+
+          let ratio = 'SOH', trigWord = 'sin', inverseFullName = 'inverse sine', topVal = 1, botVal = 1, topLetter = 'O', botLetter = 'H', ansAng = 0;
+          if (map.O && map.H) {
+            ratio = 'SOH'; trigWord = 'sin'; inverseFullName = 'inverse sine'; topLetter = 'O'; botLetter = 'H';
+            topVal = map.O; botVal = map.H; ansAng = asinFn(topVal / botVal);
+          } else if (map.A && map.H) {
+            ratio = 'CAH'; trigWord = 'cos'; inverseFullName = 'inverse cosine'; topLetter = 'A'; botLetter = 'H';
+            topVal = map.A; botVal = map.H; ansAng = acosFn(topVal / botVal);
+          } else {
+            ratio = 'TOA'; trigWord = 'tan'; inverseFullName = 'inverse tangent'; topLetter = 'O'; botLetter = 'A';
+            topVal = map.O; botVal = map.A; ansAng = atanFn(topVal / botVal);
+          }
+
+          const labels = { O: 'o', A: 'a', H: 'h' };
+          labels[s1Type] = `${s1Type.toLowerCase()} = ${s1Val}`;
+          labels[s2Type] = `${s2Type.toLowerCase()} = ${s2Val}`;
+          drawSolverTriangleSvg({
+            angleLabel: 'θ = ?',
+            labelO: labels.O,
+            labelA: labels.A,
+            labelH: labels.H
+          });
+
+          highlightFormulaCard(ratio, `You have ${topLetter.toLowerCase()} and ${botLetter.toLowerCase()} → Pick ${ratio}`);
+          document.getElementById('finalAnswerPill').textContent = `θ ≈ ${round1(ansAng)}${unitStr}`;
+
+          renderPptSteps([
+            {
+              num: 1,
+              title: 'Mark the missing angle θ & label O, A, H',
+              desc: `We want angle <strong>θ</strong> inside the triangle. We know <strong>${sideNames[s1Type]} = ${s1Val}</strong> and <strong>${sideNames[s2Type]} = ${s2Val}</strong>.`
+            },
+            {
+              num: 2,
+              title: `Choose ${ratio} (${trigWord})`,
+              desc: `Because you have <strong>${topLetter}</strong> and <strong>${botLetter}</strong>, use <strong>${ratio}</strong>: <span class="font-math font-bold">${trigWord}(θ) = <span class="frac"><span class="num">${topLetter}</span><span class="den">${botLetter}</span></span></span>`
+            },
+            {
+              num: 3,
+              title: 'Substitute your two side lengths into the fraction',
+              desc: `<div class="font-math text-sm">${trigWord}(θ) = <span class="frac"><span class="num">${topVal}</span><span class="den">${botVal}</span></span></div>`
+            },
+            {
+              num: 4,
+              title: `Use the ${inverseFullName} (${trigWord}<sup>-1</sup>) to free θ`,
+              desc: `<div class="space-y-2">
+                <div class="p-2.5 rounded-lg bg-sky-50 border border-sky-200 text-xs font-sans text-sky-950 leading-relaxed">
+                  <strong>Why use the ${inverseFullName} (${trigWord}<sup>-1</sup>)?</strong> Because <strong>θ</strong> is trapped inside ${trigWord}(θ), and you <strong>CANNOT divide by the word "${trigWord}"</strong> (since ${trigWord} is a function, not a number). Using the <strong>${inverseFullName} (${trigWord}<sup>-1</sup>)</strong> acts like an <strong>"undo" button</strong>—just like subtraction undoes addition—to cancel out ${trigWord} and leave θ alone!
+                </div>
+                <div class="font-math text-sm">θ = ${trigWord}<sup>-1</sup>(<span class="frac"><span class="num">${topVal}</span><span class="den">${botVal}</span></span>)</div>
+              </div>`
+            },
+            {
+              num: 5,
+              title: 'Round to the nearest tenth & sanity-check',
+              desc: `<div class="font-math text-sm"><strong>θ ≈ ${round1(ansAng)}${unitStr}</strong> &nbsp; <span class="text-xs font-sans text-emerald-700 font-semibold">(Check: Acute angle between 0° and 90° ✓)</span></div>`
+            }
+          ]);
+        }
+      }
+
+      ['inputRefAngle', 'selectKnownSide', 'inputKnownVal', 'selectTargetSide',
+       'selectAngSide1', 'inputAngVal1', 'selectAngSide2', 'inputAngVal2'].forEach((id) => {
+        document.getElementById(id).addEventListener('input', solveMainTriangle);
+        document.getElementById(id).addEventListener('change', solveMainTriangle);
+      });
+
+      // ---------------------------------------------------------------------
+      // 3. TAB 2: ELEVATION & DEPRESSION VISUALIZER
+      // ---------------------------------------------------------------------
+      function setElevScene(scene) {
+        state.elevScene = scene;
+        const btnL = document.getElementById('btnSceneLighthouse');
+        const btnW = document.getElementById('btnSceneLadder');
+        if (scene === 'lighthouse') {
+          btnL.className = 'px-3 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow transition cursor-pointer';
+          btnW.className = 'px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        } else {
+          btnW.className = 'px-3 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow transition cursor-pointer';
+          btnL.className = 'px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        }
+        updateElevationVisualizer();
+      }
+
+      function setElevView(view) {
+        state.elevView = view;
+        const btnE = document.getElementById('btnViewElevation');
+        const btnD = document.getElementById('btnViewDepression');
+        if (view === 'elevation') {
+          btnE.className = 'px-3 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow transition cursor-pointer';
+          btnD.className = 'px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        } else {
+          btnD.className = 'px-3 py-2 rounded-lg text-xs font-bold bg-amber-600 text-white shadow transition cursor-pointer';
+          btnE.className = 'px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        }
+        updateElevationVisualizer();
+      }
+
+      document.getElementById('btnSceneLighthouse').addEventListener('click', () => setElevScene('lighthouse'));
+      document.getElementById('btnSceneLadder').addEventListener('click', () => setElevScene('ladder'));
+      document.getElementById('btnViewElevation').addEventListener('click', () => setElevView('elevation'));
+      document.getElementById('btnViewDepression').addEventListener('click', () => setElevView('depression'));
+
+      function updateElevGoalControls() {
+        const goal = document.getElementById('selectElevGoal').value;
+        document.getElementById('ctrlElevHeight').classList.toggle('opacity-45', goal === 'height');
+        document.getElementById('numElevHeight').disabled = goal === 'height';
+        document.getElementById('sliderElevHeight').disabled = goal === 'height';
+
+        document.getElementById('ctrlElevDist').classList.toggle('opacity-45', goal === 'distance');
+        document.getElementById('numElevDist').disabled = goal === 'distance';
+        document.getElementById('sliderElevDist').disabled = goal === 'distance';
+
+        document.getElementById('ctrlElevAngle').classList.toggle('opacity-45', goal === 'angle');
+        document.getElementById('numElevAngle').disabled = goal === 'angle';
+        document.getElementById('sliderElevAngle').disabled = goal === 'angle';
+
+        updateElevationVisualizer();
+      }
+
+      document.getElementById('selectElevGoal').addEventListener('change', updateElevGoalControls);
+
+      function bindSliderAndInput(numId, sliderId) {
+        const numEl = document.getElementById(numId);
+        const sldEl = document.getElementById(sliderId);
+        numEl.addEventListener('input', () => {
+          const val = parseFloat(numEl.value);
+          if (!isNaN(val)) {
+            sldEl.value = Math.min(Math.max(val, parseFloat(sldEl.min)), parseFloat(sldEl.max));
+          }
+          updateElevationVisualizer();
+        });
+        sldEl.addEventListener('input', () => {
+          numEl.value = sldEl.value;
+          updateElevationVisualizer();
+        });
+      }
+
+      bindSliderAndInput('numElevHeight', 'sliderElevHeight');
+      bindSliderAndInput('numElevDist', 'sliderElevDist');
+      bindSliderAndInput('numElevAngle', 'sliderElevAngle');
+
+      function updateElevationVisualizer() {
+        const goal = document.getElementById('selectElevGoal').value;
+        const unitStr = state.angleMode === 'DEG' ? '°' : ' rad';
+        let h = Math.max(0.1, parseFloat(document.getElementById('numElevHeight').value) || 25);
+        let d = Math.max(0.1, parseFloat(document.getElementById('numElevDist').value) || 40);
+        let ang = Math.min(89, Math.max(1, parseFloat(document.getElementById('numElevAngle').value) || 32));
+        const isDep = state.elevView === 'depression';
+        const isLadder = state.elevScene === 'ladder';
+
+        document.getElementById('elevSceneTitle').textContent = isLadder
+          ? (isDep ? 'Ladder Against Wall • Angle of Depression (Looking DOWN)' : 'Ladder Against Wall • Angle of Elevation (Looking UP)')
+          : (isDep ? 'Lighthouse & Boat • Angle of Depression (Looking DOWN)' : 'Lighthouse & Boat • Angle of Elevation (Looking UP)');
+
+        let ansText = '', steps = [];
+        if (goal === 'height') {
+          h = d * tanFn(ang);
+          ansText = `Height ≈ ${round1(h)} m`;
+          steps = [
+            { num: 1, title: 'Label O and A from θ', desc: `Vertical Height is <strong>Opposite (O = x)</strong> and Ground Distance is <strong>Adjacent (A = ${d} m)</strong>.` },
+            { num: 2, title: 'Choose TOA (tan)', desc: `We have O and A, so use <strong>TOA</strong>: <span class="font-math">tan(θ) = <span class="frac"><span class="num">O</span><span class="den">A</span></span></span>` },
+            { num: 3, title: 'Substitute known values', desc: `<span class="font-math">tan(${ang}°) = <span class="frac"><span class="num">x</span><span class="den">${d}</span></span></span>` },
+            { num: 4, title: 'Solve for x (Put 1 underneath & cross-multiply)', desc: `<div class="space-y-1 font-math text-xs sm:text-sm"><div><span class="frac"><span class="num">tan(${ang}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">x</span><span class="den">${d}</span></span></div><div>x = ${d} · tan(${ang}°)</div></div>` },
+            { num: 5, title: 'Round to nearest tenth', desc: `<strong class="font-math">Height ≈ ${round1(h)} m</strong>` }
+          ];
+        } else if (goal === 'distance') {
+          d = h / tanFn(ang);
+          ansText = `Distance ≈ ${round1(d)} m`;
+          steps = [
+            { num: 1, title: 'Label O and A from θ', desc: `Vertical Height is <strong>Opposite (O = ${h} m)</strong> and Ground Distance is <strong>Adjacent (A = x)</strong>.` },
+            { num: 2, title: 'Choose TOA (tan)', desc: `We have O and A, so use <strong>TOA</strong>: <span class="font-math">tan(θ) = <span class="frac"><span class="num">O</span><span class="den">A</span></span></span>` },
+            { num: 3, title: 'Substitute known values', desc: `<span class="font-math">tan(${ang}°) = <span class="frac"><span class="num">${h}</span><span class="den">x</span></span></span>` },
+            { num: 4, title: 'Solve for x (Put 1 underneath, cross-multiply & cancel)', desc: `<div class="space-y-1.5 font-math text-xs sm:text-sm"><div><span class="frac"><span class="num">tan(${ang}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${h}</span><span class="den">x</span></span></div><div><span class="frac"><span class="num">x · <span class="cancel-red">tan(${ang}°)</span></span><span class="den"><span class="cancel-red">tan(${ang}°)</span></span></span> = <span class="frac"><span class="num">${h}</span><span class="den">tan(${ang}°)</span></span></div><div>x = <span class="frac"><span class="num">${h}</span><span class="den">tan(${ang}°)</span></span></div></div>` },
+            { num: 5, title: 'Round to nearest tenth', desc: `<strong class="font-math">Distance ≈ ${round1(d)} m</strong>` }
+          ];
+        } else {
+          ang = atanFn(h / d);
+          ansText = `Angle θ ≈ ${round1(ang)}${unitStr}`;
+          steps = [
+            { num: 1, title: 'Label O and A from θ', desc: `Vertical Height is <strong>Opposite (O = ${h} m)</strong> and Ground Distance is <strong>Adjacent (A = ${d} m)</strong>.` },
+            { num: 2, title: 'Choose TOA (tan)', desc: `We have O and A, so use <strong>TOA</strong>: <span class="font-math">tan(θ) = <span class="frac"><span class="num">O</span><span class="den">A</span></span></span>` },
+            { num: 3, title: 'Substitute known values', desc: `<span class="font-math">tan(θ) = <span class="frac"><span class="num">${h}</span><span class="den">${d}</span></span></span>` },
+            { num: 4, title: 'Use the inverse tangent (tan⁻¹) to undo tan', desc: `<span class="font-math">θ = tan<sup>-1</sup>(<span class="frac"><span class="num">${h}</span><span class="den">${d}</span></span>)</span>` },
+            { num: 5, title: 'Round to nearest tenth', desc: `<strong class="font-math">θ ≈ ${round1(ang)}${unitStr}</strong>` }
+          ];
+        }
+
+        document.getElementById('elevAnswerPill').textContent = ansText;
+        document.getElementById('elevEqualBadge').textContent = `Elevation (${goal === 'angle' ? round1(ang) : ang}°) = Depression (${goal === 'angle' ? round1(ang) : ang}°)`;
+        renderPptSteps(steps, 'elevStepsContainer');
+
+        const svg = document.getElementById('elevSceneSvg');
+        const hDisp = goal === 'height' ? 'x = ?' : `${round1(h)} m`;
+        const dDisp = goal === 'distance' ? 'x = ?' : `${round1(d)} m`;
+        const aDisp = goal === 'angle' ? 'θ = ?' : `${round1(ang)}°`;
+
+        const structureSvg = state.elevScene === 'lighthouse'
+          ? `
+            <rect x="68" y="65" width="24" height="145" fill="#f8fafc" stroke="#334155" stroke-width="2" />
+            <polygon points="64,65 96,65 80,45" fill="#ef4444" stroke="#334155" stroke-width="2" />
+            <rect x="73" y="53" width="14" height="12" fill="#fef08a" stroke="#334155" stroke-width="1.5" />
+            <rect x="20" y="210" width="420" height="28" fill="#bae6fd" opacity="0.65" />
+            <polygon points="355,210 405,210 395,222 365,222" fill="#0284c7" />
+            <polygon points="380,185 380,208 398,208" fill="#ffffff" stroke="#334155" stroke-width="1.5" />
+            <text x="80" y="38" text-anchor="middle" font-size="10.5" font-weight="800" fill="#334155">Lighthouse</text>
+            <text x="380" y="234" text-anchor="middle" font-size="10.5" font-weight="800" fill="#0369a1">Boat</text>
+          `
+          : `
+            <rect x="42" y="40" width="50" height="170" fill="#fed7aa" stroke="#9a3412" stroke-width="2" />
+            <rect x="54" y="65" width="14" height="18" fill="#bae6fd" stroke="#9a3412" stroke-width="1.2" />
+            <rect x="54" y="105" width="14" height="18" fill="#bae6fd" stroke="#9a3412" stroke-width="1.2" />
+            <rect x="54" y="145" width="14" height="18" fill="#bae6fd" stroke="#9a3412" stroke-width="1.2" />
+            <line x1="92" y1="65" x2="375" y2="210" stroke="#b45309" stroke-width="7" stroke-linecap="round" />
+            <line x1="145" y1="92" x2="152" y2="84" stroke="#78350f" stroke-width="3" />
+            <line x1="210" y1="125" x2="217" y2="117" stroke="#78350f" stroke-width="3" />
+            <line x1="275" y1="158" x2="282" y2="150" stroke="#78350f" stroke-width="3" />
+            <text x="67" y="33" text-anchor="middle" font-size="10.5" font-weight="800" fill="#9a3412">Wall</text>
+            <text x="255" y="132" text-anchor="middle" font-size="10.5" font-weight="800" fill="#92400e">Ladder</text>
+          `;
+
+        const activeTriangleOverlay = isDep
+          ? `
+            <polygon points="92,65 375,65 375,210" fill="rgba(245, 158, 11, 0.14)" />
+            <line x1="92" y1="65" x2="395" y2="65" stroke="#d97706" stroke-width="3.5" stroke-dasharray="6,4" />
+            <line x1="375" y1="65" x2="375" y2="210" stroke="#059669" stroke-width="2.5" stroke-dasharray="4,4" />
+            <text x="395" y="56" text-anchor="end" font-size="11" font-weight="800" fill="#b45309">Horizontal Eye-Level (Top)</text>
+            <path d="M 142 65 A 50 50 0 0 1 136 87" fill="none" stroke="#d97706" stroke-width="4.5" />
+            <text x="152" y="85" text-anchor="start" font-size="12" font-weight="800" fill="#b45309">↘ Depression: ${aDisp}</text>
+            <text x="324" y="198" text-anchor="end" font-size="10.5" font-weight="700" fill="#94a3b8">Elevation: ${aDisp}</text>
+          `
+          : `
+            <polygon points="92,65 92,210 375,210" fill="rgba(16, 185, 129, 0.14)" />
+            <line x1="92" y1="65" x2="395" y2="65" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="5,5" />
+            <text x="395" y="56" text-anchor="end" font-size="10" font-weight="700" fill="#94a3b8">Horizontal Eye-Level</text>
+            <path d="M 328 210 A 47 47 0 0 1 334 188" fill="none" stroke="#059669" stroke-width="4.5" />
+            <text x="320" y="196" text-anchor="end" font-size="12" font-weight="800" fill="#047857">↗ Elevation: ${aDisp}</text>
+            <text x="148" y="83" text-anchor="start" font-size="10.5" font-weight="700" fill="#94a3b8">Depression: ${aDisp}</text>
+          `;
+
+        const calloutBanner = isDep
+          ? `<rect x="125" y="12" width="305" height="25" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.8" />
+             <text x="277" y="29" text-anchor="middle" font-size="11" font-weight="800" fill="#92400e">↘ Looking DOWN from top horizontal = ${aDisp}</text>`
+          : `<rect x="125" y="12" width="305" height="25" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="1.8" />
+             <text x="277" y="29" text-anchor="middle" font-size="11" font-weight="800" fill="#065f46">↗ Looking UP from ground horizontal = ${aDisp}</text>`;
+
+        svg.innerHTML = `
+          ${calloutBanner}
+          <line x1="20" y1="210" x2="440" y2="210" stroke="#64748b" stroke-width="3" />
+          ${structureSvg}
+          ${activeTriangleOverlay}
+          <line x1="92" y1="65" x2="375" y2="210" stroke="#4f46e5" stroke-width="2.5" stroke-dasharray="${state.elevScene === 'ladder' ? '0' : '5,4'}" />
+          <polyline points="92,194 108,194 108,210" fill="none" stroke="#475569" stroke-width="2" />
+          <text x="38" y="140" text-anchor="end" font-size="12" font-weight="800" fill="#047857">${hDisp}</text>
+          <text x="234" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="#1d4ed8">${dDisp}</text>
+        `;
+      }
+
+      // ---------------------------------------------------------------------
+      // 4. TAB 3: LEARN TAB SVG FLIP (TRIANGLE A-b-c WITH 6, 8, 10)
+      // ---------------------------------------------------------------------
+      function renderLearnSvg() {
+        const svg = document.getElementById('learnSvg1');
+        const atCornerC = state.learnFlipped;
+        svg.innerHTML = `
+          <polygon points="75,150 250,150 75,32" fill="#eef2ff" stroke="#475569" stroke-width="2.2" />
+          <polyline points="75,135 90,135 90,150" fill="none" stroke="#64748b" stroke-width="1.8" />
+          <text x="64" y="160" text-anchor="end" font-size="13" font-weight="800" fill="#475569">A</text>
+          <text x="262" y="155" text-anchor="start" font-size="13.5" font-weight="800" fill="${!atCornerC ? '#e11d48' : '#1e293b'}">b</text>
+          <text x="66" y="25" text-anchor="end" font-size="13.5" font-weight="800" fill="${atCornerC ? '#e11d48' : '#1e293b'}">c</text>
+          ${atCornerC
+            ? `<path d="M 75 64 A 32 32 0 0 0 101 50" fill="none" stroke="#f59e0b" stroke-width="3" />
+               <text x="108" y="54" font-size="11" font-weight="800" fill="#b45309">Stand at c</text>`
+            : `<path d="M 218 150 A 32 32 0 0 0 224 131" fill="none" stroke="#f59e0b" stroke-width="3" />
+               <text x="210" y="142" text-anchor="end" font-size="11" font-weight="800" fill="#b45309">Stand at b</text>`
+          }
+          <line x1="75" y1="32" x2="75" y2="150" stroke="${atCornerC ? '#2563eb' : '#059669'}" stroke-width="3.5" />
+          <text x="65" y="95" text-anchor="end" font-size="11" font-weight="800" fill="${atCornerC ? '#1d4ed8' : '#047857'}">
+            ${atCornerC ? '6 (a)' : '6 (o)'}
+          </text>
+          <line x1="75" y1="150" x2="250" y2="150" stroke="${atCornerC ? '#059669' : '#2563eb'}" stroke-width="3.5" />
+          <text x="162" y="170" text-anchor="middle" font-size="11" font-weight="800" fill="${atCornerC ? '#047857' : '#1d4ed8'}">
+            ${atCornerC ? '8 (o)' : '8 (a)'}
+          </text>
+          <line x1="75" y1="32" x2="250" y2="150" stroke="#7c3aed" stroke-width="3.5" />
+          <text x="172" y="82" font-size="11" font-weight="800" fill="#6d28d9">10 (h)</text>
+        `;
+
+        const workedBox = document.getElementById('learnRatioWorked');
+        if (!atCornerC) {
+          workedBox.innerHTML = `
+            <span>Standing at corner <strong>b</strong>:</span>
+            <span class="font-bold">sin(b) = <span class="frac"><span class="num">o</span><span class="den">h</span></span> = <span class="frac"><span class="num">6</span><span class="den">10</span></span></span>
+          `;
+        } else {
+          workedBox.innerHTML = `
+            <span>Standing at corner <strong>c</strong>:</span>
+            <span class="font-bold">sin(c) = <span class="frac"><span class="num">o</span><span class="den">h</span></span> = <span class="frac"><span class="num">8</span><span class="den">10</span></span></span>
+          `;
+        }
+      }
+
+      document.getElementById('btnFlipLearnSvg').addEventListener('click', () => {
+        state.learnFlipped = !state.learnFlipped;
+        renderLearnSvg();
+      });
+
+      // ---------------------------------------------------------------------
+      // 5. TAB 4: PRACTICE (MODES 1-4)
+      // ---------------------------------------------------------------------
+      let currentPracticeQ = null;
+      let hintsRevealed = 0;
+      let questionSolved = false;
+
+      function setPracticeMode(pmode) {
+        state.practiceMode = pmode;
+        document.querySelectorAll('.pmode-btn').forEach((btn) => {
+          if (btn.dataset.pmode === pmode) {
+            btn.className = 'pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow transition cursor-pointer text-center';
+          } else {
+            btn.className = 'pmode-btn px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer text-center';
+          }
+        });
+
+        if (pmode === 'ratio') {
+          document.getElementById('practice-sub-numeric').classList.add('hidden');
+          document.getElementById('practice-sub-ratio').classList.remove('hidden');
+          nextRatioQuestion();
+        } else {
+          document.getElementById('practice-sub-ratio').classList.add('hidden');
+          document.getElementById('practice-sub-numeric').classList.remove('hidden');
+          nextPracticeQuestion();
+        }
+      }
+
+      document.querySelectorAll('.pmode-btn').forEach((btn) => {
+        btn.addEventListener('click', () => setPracticeMode(btn.dataset.pmode));
+      });
+
+      function generateNumericQuestion(mode) {
+        if (mode === 'basic') {
+          const isSwap = Math.random() > 0.5;
+          const theta = randInt(22, 68);
+          const known = randInt(10, 45);
+          const type = ['sin', 'cos', 'tan'][randInt(0, 2)];
+          let ans = 0, labelO = '', labelA = '', labelH = '', setupHtml = '', step3Html = '', oahHint = '';
+
+          if (!isSwap) {
+            if (type === 'sin') {
+              ans = known * sinFn(theta);
+              labelO = 'x'; labelA = ''; labelH = `${known}`;
+              oahHint = `From ${theta}°, the side across is <strong>Opposite (o = x)</strong> and the slanted side is <strong>Hypotenuse (h = ${known})</strong>.`;
+              setupHtml = `Use <strong>SOH</strong>: <span class="font-math">sin(${theta}°) = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span></span>`;
+              step3Html = `x is on TOP → put <strong>1</strong> underneath &amp; cross-multiply: <span class="font-math"><span class="frac"><span class="num">sin(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span> → x = ${known} · sin(${theta}°)</span>`;
+            } else if (type === 'cos') {
+              ans = known * cosFn(theta);
+              labelO = ''; labelA = 'x'; labelH = `${known}`;
+              oahHint = `From ${theta}°, the bottom side touching it is <strong>Adjacent (a = x)</strong> and the slanted side is <strong>Hypotenuse (h = ${known})</strong>.`;
+              setupHtml = `Use <strong>CAH</strong>: <span class="font-math">cos(${theta}°) = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span></span>`;
+              step3Html = `x is on TOP → put <strong>1</strong> underneath &amp; cross-multiply: <span class="font-math"><span class="frac"><span class="num">cos(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span> → x = ${known} · cos(${theta}°)</span>`;
+            } else {
+              ans = known * tanFn(theta);
+              labelO = 'x'; labelA = `${known}`; labelH = '';
+              oahHint = `From ${theta}°, the across side is <strong>Opposite (o = x)</strong> and the touching side is <strong>Adjacent (a = ${known})</strong>.`;
+              setupHtml = `Use <strong>TOA</strong>: <span class="font-math">tan(${theta}°) = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span></span>`;
+              step3Html = `x is on TOP → put <strong>1</strong> underneath &amp; cross-multiply: <span class="font-math"><span class="frac"><span class="num">tan(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">x</span><span class="den">${known}</span></span> → x = ${known} · tan(${theta}°)</span>`;
+            }
+
+            return {
+              badge: 'Level 1 • Missing Side (Easy: x on Top)',
+              prompt: `Find the missing side <strong>x</strong> to the nearest tenth:`,
+              unit: 'units',
+              isAngle: false,
+              xOnBottom: false,
+              theta, known, trigType: type,
+              correctAns: round1(ans),
+              rawAns: ans,
+              angleLabel: `${theta}°`,
+              labelO, labelA, labelH,
+              hints: [oahHint, setupHtml, step3Html]
+            };
+          } else {
+            if (type === 'sin') {
+              ans = known / sinFn(theta);
+              labelO = `${known}`; labelA = ''; labelH = 'x';
+              oahHint = `From ${theta}°, <strong>Opposite (o = ${known})</strong> and <strong>Hypotenuse (h = x)</strong>.`;
+              setupHtml = `Use <strong>SOH</strong>: <span class="font-math">sin(${theta}°) = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span></span>`;
+              step3Html = `x is on BOTTOM → put <strong>1</strong> underneath, cross-multiply &amp; divide: <span class="font-math"><span class="frac"><span class="num">sin(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span> → x = <span class="frac"><span class="num">${known}</span><span class="den">sin(${theta}°)</span></span></span>`;
+            } else if (type === 'cos') {
+              ans = known / cosFn(theta);
+              labelO = ''; labelA = `${known}`; labelH = 'x';
+              oahHint = `From ${theta}°, <strong>Adjacent (a = ${known})</strong> and <strong>Hypotenuse (h = x)</strong>.`;
+              setupHtml = `Use <strong>CAH</strong>: <span class="font-math">cos(${theta}°) = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span></span>`;
+              step3Html = `x is on BOTTOM → put <strong>1</strong> underneath, cross-multiply &amp; divide: <span class="font-math"><span class="frac"><span class="num">cos(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span> → x = <span class="frac"><span class="num">${known}</span><span class="den">cos(${theta}°)</span></span></span>`;
+            } else {
+              ans = known / tanFn(theta);
+              labelO = `${known}`; labelA = 'x'; labelH = '';
+              oahHint = `From ${theta}°, <strong>Opposite (o = ${known})</strong> and <strong>Adjacent (a = x)</strong>.`;
+              setupHtml = `Use <strong>TOA</strong>: <span class="font-math">tan(${theta}°) = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span></span>`;
+              step3Html = `x is on BOTTOM → put <strong>1</strong> underneath, cross-multiply &amp; divide: <span class="font-math"><span class="frac"><span class="num">tan(${theta}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${known}</span><span class="den">x</span></span> → x = <span class="frac"><span class="num">${known}</span><span class="den">tan(${theta}°)</span></span></span>`;
+            }
+
+            return {
+              badge: 'Level 1 • Missing Side (Core: x on Bottom)',
+              prompt: `Find the missing side <strong>x</strong> to the nearest tenth (watch where <strong>x</strong> is!):`,
+              unit: 'units',
+              isAngle: false,
+              xOnBottom: true,
+              theta, known, trigType: type,
+              correctAns: round1(ans),
+              rawAns: ans,
+              angleLabel: `${theta}°`,
+              labelO, labelA, labelH,
+              hints: [oahHint, setupHtml, step3Html]
+            };
+          }
+        } else if (mode === 'swap') {
+          const type = ['sin', 'cos', 'tan'][randInt(0, 2)];
+          let s1 = randInt(5, 16), s2 = s1 + randInt(4, 14);
+          let ans = 0, labelO = '', labelA = '', labelH = '', setupHtml = '', step3Html = '', oahHint = '';
+
+          if (type === 'sin') {
+            ans = asinFn(s1 / s2);
+            labelO = `${s1}`; labelH = `${s2}`;
+            oahHint = `From angle θ, <strong>Opposite (o = ${s1})</strong> and <strong>Hypotenuse (h = ${s2})</strong>.`;
+            setupHtml = `Use <strong>SOH</strong>: <span class="font-math">sin(θ) = <span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span></span>`;
+            step3Html = `Use the <strong>inverse sine (sin<sup>-1</sup>)</strong>: <span class="font-math">θ = sin<sup>-1</sup>(<span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span>)</span>`;
+          } else if (type === 'cos') {
+            ans = acosFn(s1 / s2);
+            labelA = `${s1}`; labelH = `${s2}`;
+            oahHint = `From angle θ, <strong>Adjacent (a = ${s1})</strong> and <strong>Hypotenuse (h = ${s2})</strong>.`;
+            setupHtml = `Use <strong>CAH</strong>: <span class="font-math">cos(θ) = <span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span></span>`;
+            step3Html = `Use the <strong>inverse cosine (cos<sup>-1</sup>)</strong>: <span class="font-math">θ = cos<sup>-1</sup>(<span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span>)</span>`;
+          } else {
+            ans = atanFn(s1 / s2);
+            labelO = `${s1}`; labelA = `${s2}`;
+            oahHint = `From angle θ, <strong>Opposite (o = ${s1})</strong> and <strong>Adjacent (a = ${s2})</strong>.`;
+            setupHtml = `Use <strong>TOA</strong>: <span class="font-math">tan(θ) = <span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span></span>`;
+            step3Html = `Use the <strong>inverse tangent (tan<sup>-1</sup>)</strong>: <span class="font-math">θ = tan<sup>-1</sup>(<span class="frac"><span class="num">${s1}</span><span class="den">${s2}</span></span>)</span>`;
+          }
+
+          return {
+            badge: 'Level 2 • Missing Angle (Inverse Trig)',
+            prompt: `Find the missing angle <strong>θ</strong> in degrees (nearest tenth):`,
+            unit: 'degrees (°)',
+            isAngle: true,
+            xOnBottom: false,
+            s1, s2, trigType: type,
+            correctAns: round1(ans),
+            rawAns: ans,
+            angleLabel: 'θ = ?',
+            labelO, labelA, labelH,
+            hints: [oahHint, setupHtml, step3Html]
+          };
+        } else {
+          const scenarios = [
+            () => {
+              const str = randInt(45, 90), ang = randInt(32, 55);
+              const ans = str * sinFn(ang);
+              return {
+                prompt: `A <strong>kite</strong> flies on a <strong>${str} m</strong> string making a <strong>${ang}°</strong> angle with the ground. How high (<strong>x</strong>) is the kite above the ground?`,
+                unit: 'm', isAngle: false, xOnBottom: false, theta: ang, known: str, trigType: 'sin',
+                correctAns: round1(ans), rawAns: ans, angleLabel: `${ang}°`, labelO: 'x', labelA: '', labelH: `${str} m`,
+                hints: [
+                  `Height is <strong>Opposite (O = x)</strong> and string length is <strong>Hypotenuse (H = ${str} m)</strong>.`,
+                  `Use <strong>SOH</strong>: <span class="font-math">sin(${ang}°) = <span class="frac"><span class="num">x</span><span class="den">${str}</span></span></span>`,
+                  `Multiply: <span class="font-math">x = ${str} · sin(${ang}°)</span>`
+                ]
+              };
+            },
+            () => {
+              const wallH = randInt(8, 18), ang = randInt(60, 75);
+              const ans = wallH / sinFn(ang);
+              return {
+                prompt: `A <strong>ladder</strong> leans against a building to reach a window <strong>${wallH} m</strong> high and makes a <strong>${ang}°</strong> angle with the ground. How long (<strong>x</strong>) is the ladder?`,
+                unit: 'm', isAngle: false, xOnBottom: true, theta: ang, known: wallH, trigType: 'sin',
+                correctAns: round1(ans), rawAns: ans, angleLabel: `${ang}°`, labelO: `${wallH} m`, labelA: '', labelH: 'x',
+                hints: [
+                  `Window height is <strong>Opposite (o = ${wallH} m)</strong> and ladder length is <strong>Hypotenuse (h = x)</strong>.`,
+                  `Use <strong>SOH</strong>: <span class="font-math">sin(${ang}°) = <span class="frac"><span class="num">${wallH}</span><span class="den">x</span></span></span>`,
+                  `x is on bottom → put <strong>1</strong> underneath, cross-multiply &amp; divide: <span class="font-math"><span class="frac"><span class="num">sin(${ang}°)</span><span class="den">1</span></span> = <span class="frac"><span class="num">${wallH}</span><span class="den">x</span></span> → x = <span class="frac"><span class="num">${wallH}</span><span class="den">sin(${ang}°)</span></span></span>`
+                ]
+              };
+            },
+            () => {
+              const dist = randInt(25, 65), ang = randInt(25, 48);
+              const ans = dist * tanFn(ang);
+              return {
+                prompt: `Standing <strong>${dist} m</strong> from the base of a <strong>flagpole</strong>, the angle of elevation to the top is <strong>${ang}°</strong>. How tall (<strong>x</strong>) is the flagpole?`,
+                unit: 'm', isAngle: false, xOnBottom: false, theta: ang, known: dist, trigType: 'tan',
+                correctAns: round1(ans), rawAns: ans, angleLabel: `${ang}°`, labelO: 'x', labelA: `${dist} m`, labelH: '',
+                hints: [
+                  `Flagpole height is <strong>Opposite (O = x)</strong> and ground distance is <strong>Adjacent (A = ${dist} m)</strong>.`,
+                  `Use <strong>TOA</strong>: <span class="font-math">tan(${ang}°) = <span class="frac"><span class="num">x</span><span class="den">${dist}</span></span></span>`,
+                  `Multiply: <span class="font-math">x = ${dist} · tan(${ang}°)</span>`
+                ]
+              };
+            },
+            () => {
+              const rise = randInt(2, 6), run = randInt(15, 35);
+              const ans = atanFn(rise / run);
+              return {
+                prompt: `A wheelchair <strong>ramp</strong> rises <strong>${rise} m</strong> vertically over a horizontal ground distance of <strong>${run} m</strong>. Find the ramp's angle of elevation <strong>θ</strong>:`,
+                unit: 'degrees (°)', isAngle: true, xOnBottom: false, s1: rise, s2: run, trigType: 'tan',
+                correctAns: round1(ans), rawAns: ans, angleLabel: 'θ = ?', labelO: `${rise} m`, labelA: `${run} m`, labelH: '',
+                hints: [
+                  `Vertical rise is <strong>Opposite (O = ${rise} m)</strong> and horizontal distance is <strong>Adjacent (A = ${run} m)</strong>.`,
+                  `Use <strong>TOA</strong>: <span class="font-math">tan(θ) = <span class="frac"><span class="num">${rise}</span><span class="den">${run}</span></span></span>`,
+                  `Use the <strong>inverse tangent (tan<sup>-1</sup>)</strong>: <span class="font-math">θ = tan<sup>-1</sup>(<span class="frac"><span class="num">${rise}</span><span class="den">${run}</span></span>)</span>`
+                ]
+              };
+            }
+          ];
+          const picked = scenarios[randInt(0, scenarios.length - 1)]();
+          return { badge: 'Level 3 • Universal Word Problem', ...picked };
+        }
+      }
+
+      function nextPracticeQuestion() {
+        hintsRevealed = 0;
+        questionSolved = false;
+        document.getElementById('hintCounter').textContent = '0';
+        document.getElementById('hintsList').innerHTML = '';
+        document.getElementById('practiceInput').value = '';
+        document.getElementById('practiceFeedback').classList.add('hidden');
+
+        currentPracticeQ = generateNumericQuestion(state.practiceMode);
+        document.getElementById('practiceLevelBadge').textContent = currentPracticeQ.badge;
+        document.getElementById('practicePrompt').innerHTML = currentPracticeQ.prompt;
+        document.getElementById('practiceUnitHint').textContent = currentPracticeQ.unit;
+
+        const svg = document.getElementById('practiceSvg');
+        svg.innerHTML = `
+          <polygon points="65,195 285,195 285,55" fill="#eef2ff" stroke="#475569" stroke-width="2.2" />
+          <polyline points="267,195 267,177 285,177" fill="none" stroke="#64748b" stroke-width="2" />
+          <path d="M 105 195 A 40 40 0 0 0 98 174" fill="none" stroke="#4f46e5" stroke-width="3" />
+          <text x="114" y="185" font-size="13" font-weight="800" fill="#4338ca">${currentPracticeQ.angleLabel}</text>
+          <text x="295" y="130" text-anchor="start" font-size="13.5" font-weight="800" fill="#047857">${currentPracticeQ.labelO}</text>
+          <text x="175" y="218" text-anchor="middle" font-size="13.5" font-weight="800" fill="#1d4ed8">${currentPracticeQ.labelA}</text>
+          <text x="165" y="114" text-anchor="end" font-size="13.5" font-weight="800" fill="#6d28d9">${currentPracticeQ.labelH}</text>
+        `;
+      }
+
+      function revealNextHint() {
+        if (!currentPracticeQ || hintsRevealed >= currentPracticeQ.hints.length) return;
+        const idx = hintsRevealed;
+        hintsRevealed += 1;
+        document.getElementById('hintCounter').textContent = `${hintsRevealed}`;
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-950 animate-fade';
+        div.innerHTML = `<strong>Hint ${hintsRevealed}:</strong> ${currentPracticeQ.hints[idx]}`;
+        document.getElementById('hintsList').appendChild(div);
+      }
+
+      function checkPracticeAnswer() {
+        const userVal = parseFloat(document.getElementById('practiceInput').value);
+        const fb = document.getElementById('practiceFeedback');
+        if (isNaN(userVal)) {
+          fb.className = 'p-4 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-950 text-sm';
+          fb.innerHTML = '⚠️ Please type a number first before checking!';
+          fb.classList.remove('hidden');
+          return;
+        }
+
+        const q = currentPracticeQ;
+        if (Math.abs(userVal - q.correctAns) <= 0.15) {
+          fb.className = 'p-4 rounded-xl border-2 border-emerald-400 bg-emerald-50 text-emerald-950 text-sm';
+          fb.innerHTML = `✅ <strong>Correct!</strong> The answer is <strong>${q.correctAns}</strong>. Great job! Click <em>New Question</em> to keep your streak going.`;
+          fb.classList.remove('hidden');
+          if (!questionSolved) {
+            questionSolved = true;
+            state.streak += 1;
+            state.solved += 1;
+            document.getElementById('practiceStreak').textContent = state.streak;
+            document.getElementById('practiceSolved').textContent = state.solved;
+          }
+          return;
+        }
+
+        state.streak = 0;
+        document.getElementById('practiceStreak').textContent = '0';
+        let diagnosis = 'Check your SOH-CAH-TOA setup and round carefully to the nearest tenth.';
+
+        if (!q.isAngle) {
+          const radTrig = q.trigType === 'sin' ? Math.sin(q.theta) : q.trigType === 'cos' ? Math.cos(q.theta) : Math.tan(q.theta);
+          const radAns = q.xOnBottom ? q.known / radTrig : q.known * radTrig;
+          const degTrig = q.trigType === 'sin' ? Math.sin(toRad(q.theta)) : q.trigType === 'cos' ? Math.cos(toRad(q.theta)) : Math.tan(toRad(q.theta));
+          const wrongOpAns = q.xOnBottom ? q.known * degTrig : q.known / degTrig;
+          const sinAns = q.xOnBottom ? q.known / Math.sin(toRad(q.theta)) : q.known * Math.sin(toRad(q.theta));
+          const cosAns = q.xOnBottom ? q.known / Math.cos(toRad(q.theta)) : q.known * Math.cos(toRad(q.theta));
+          const tanAns = q.xOnBottom ? q.known / Math.tan(toRad(q.theta)) : q.known * Math.tan(toRad(q.theta));
+
+          if (Math.abs(userVal - round1(radAns)) <= 0.2) {
+            diagnosis = `<strong>Radian Mode Error!</strong> You got <strong>${userVal}</strong> because your calculator is in <strong>RAD</strong> mode instead of <strong>DEG</strong> mode! Switch your calculator to <strong>DEG</strong> and recalculate.`;
+          } else if (Math.abs(userVal - round1(wrongOpAns)) <= 0.2) {
+            diagnosis = q.xOnBottom
+              ? `<strong>Multiply vs. Divide Trap!</strong> You multiplied (<em>${q.known} · ${q.trigType}(${q.theta}°)</em>), but <strong>x is on the BOTTOM</strong> of the fraction! You need to <strong>divide</strong>: <em>${q.known} ÷ ${q.trigType}(${q.theta}°)</em>.`
+              : `<strong>Multiply vs. Divide Trap!</strong> You divided, but <strong>x is on the TOP</strong> of the fraction! Simply multiply: <em>${q.known} · ${q.trigType}(${q.theta}°)</em>.`;
+          } else if (Math.abs(userVal - round1(sinAns)) <= 0.2 || Math.abs(userVal - round1(cosAns)) <= 0.2 || Math.abs(userVal - round1(tanAns)) <= 0.2) {
+            diagnosis = `<strong>Wrong Trig Ratio!</strong> You used the right algebra, but picked the wrong function from SOH-CAH-TOA. This triangle uses <strong>${q.trigType.toUpperCase()}</strong>!`;
+          }
+        } else {
+          const ratioVal = q.s1 / q.s2;
+          const radAngle = q.trigType === 'sin' ? Math.asin(ratioVal) : q.trigType === 'cos' ? Math.acos(ratioVal) : Math.atan(ratioVal);
+          if (Math.abs(userVal - round1(radAngle)) <= 0.2) {
+            diagnosis = `<strong>Radian Mode Error!</strong> <strong>${userVal}</strong> is the angle in <strong>Radians</strong>! Switch your calculator to <strong>DEG</strong> mode to get the angle in degrees.`;
+          } else if (Math.abs(userVal - round1(ratioVal)) <= 0.1) {
+            diagnosis = `<strong>Forgot Inverse Trig!</strong> You calculated the decimal fraction (${round1(ratioVal)}), which is ${q.trigType}(θ). Now press <strong>2nd / Shift + ${q.trigType}<sup>-1</sup></strong> (the inverse function) to turn that decimal into an angle!`;
+          }
+        }
+
+        fb.className = 'p-4 rounded-xl border-2 border-rose-300 bg-rose-50 text-rose-950 text-sm';
+        fb.innerHTML = `❌ <strong>Not quite (${userVal}).</strong> ${diagnosis}`;
+        fb.classList.remove('hidden');
+      }
+
+      document.getElementById('btnCheckPractice').addEventListener('click', checkPracticeAnswer);
+      document.getElementById('practiceInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkPracticeAnswer();
+      });
+      document.getElementById('btnNextHint').addEventListener('click', revealNextHint);
+      document.getElementById('btnNextQuestion').addEventListener('click', nextPracticeQuestion);
+
+      // ---------------------------------------------------------------------
+      // SUB-MODE 4: WRITE RATIO (sin b) FROM ALL 3 SIDES (TRIANGLE A-b-c)
+      // ---------------------------------------------------------------------
+      const pythagoreanTriples = [
+        [3, 4, 5],
+        [5, 12, 13],
+        [8, 15, 17],
+        [7, 24, 25],
+        [6, 8, 10],
+        [9, 12, 15]
+      ];
+
+      let currentRatioQ = null;
+      let ratioHintsRevealed = 0;
+      let ratioAnsweredCorrectly = false;
+      let showRatioOahLabels = false;
+
+      function drawRatioTriangleSvg() {
+        const q = currentRatioQ;
+        if (!q) return;
+        const svg = document.getElementById('ratioSvg');
+        const { sideAc, sideAb, sidebc, targetVertex } = q;
+
+        const labelAc = showRatioOahLabels ? `${sideAc} (${targetVertex === 'b' ? 'o' : 'a'})` : `${sideAc}`;
+        const labelAb = showRatioOahLabels ? `${sideAb} (${targetVertex === 'b' ? 'a' : 'o'})` : `${sideAb}`;
+        const labelbc = showRatioOahLabels ? `${sidebc} (h)` : `${sidebc}`;
+
+        const colorAc = showRatioOahLabels ? (targetVertex === 'b' ? '#047857' : '#1d4ed8') : '#0f172a';
+        const colorAb = showRatioOahLabels ? (targetVertex === 'b' ? '#1d4ed8' : '#047857') : '#0f172a';
+        const colorbc = '#6d28d9';
+
+        svg.innerHTML = `
+          <polygon points="75,195 285,195 75,55" fill="#eef2ff" stroke="#475569" stroke-width="2.5" />
+          <polyline points="75,177 93,177 93,195" fill="none" stroke="#64748b" stroke-width="2" />
+          <text x="68" y="46" text-anchor="end" font-size="14.5" font-weight="800" fill="${targetVertex === 'c' ? '#e11d48' : '#1e293b'}">c</text>
+          <text x="296" y="200" text-anchor="start" font-size="14.5" font-weight="800" fill="${targetVertex === 'b' ? '#e11d48' : '#1e293b'}">b</text>
+          <text x="64" y="205" text-anchor="end" font-size="14" font-weight="800" fill="#475569">A (90°)</text>
+          ${targetVertex === 'b'
+            ? `<path d="M 248 195 A 37 37 0 0 0 255 173" fill="none" stroke="#e11d48" stroke-width="3.2" />`
+            : `<path d="M 75 92 A 37 37 0 0 0 105 75" fill="none" stroke="#e11d48" stroke-width="3.2" />`
+          }
+          <text x="63" y="130" text-anchor="end" font-size="13" font-weight="800" fill="${colorAc}">${labelAc}</text>
+          <text x="180" y="218" text-anchor="middle" font-size="13" font-weight="800" fill="${colorAb}">${labelAb}</text>
+          <text x="192" y="116" text-anchor="start" font-size="13" font-weight="800" fill="${colorbc}">${labelbc}</text>
+        `;
+      }
+
+      function nextRatioQuestion() {
+        ratioHintsRevealed = 0;
+        ratioAnsweredCorrectly = false;
+        showRatioOahLabels = false;
+        const toggleBtn = document.getElementById('btnToggleRatioLabels');
+        toggleBtn.textContent = '👁️ Show o, a, h Labels';
+        toggleBtn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer';
+
+        document.getElementById('ratioHintCounter').textContent = '0';
+        document.getElementById('ratioHintsList').innerHTML = '';
+        document.getElementById('ratioInputNum').value = '';
+        document.getElementById('ratioInputDen').value = '';
+        document.getElementById('ratioFeedback').classList.add('hidden');
+
+        const triple = pythagoreanTriples[randInt(0, pythagoreanTriples.length - 1)];
+        const swapLegs = Math.random() > 0.5;
+        const sideAc = swapLegs ? triple[1] : triple[0];
+        const sideAb = swapLegs ? triple[0] : triple[1];
+        const sidebc = triple[2];
+
+        const targetVertex = Math.random() > 0.35 ? 'b' : 'c';
+        const targetFunc = ['sin', 'cos', 'tan'][randInt(0, 2)];
+
+        const opp = targetVertex === 'b' ? sideAc : sideAb;
+        const adj = targetVertex === 'b' ? sideAb : sideAc;
+        const hyp = sidebc;
+
+        let num = opp, den = hyp, formulaLabel = 'SOH', topWord = 'o (Opposite)', botWord = 'h (Hypotenuse)';
+        if (targetFunc === 'sin') {
+          num = opp; den = hyp; formulaLabel = 'SOH'; topWord = 'o (Opposite)'; botWord = 'h (Hypotenuse)';
+        } else if (targetFunc === 'cos') {
+          num = adj; den = hyp; formulaLabel = 'CAH'; topWord = 'a (Adjacent)'; botWord = 'h (Hypotenuse)';
+        } else {
+          num = opp; den = adj; formulaLabel = 'TOA'; topWord = 'o (Opposite)'; botWord = 'a (Adjacent)';
+        }
+
+        const otherOpp = targetVertex === 'b' ? sideAb : sideAc;
+        const otherAdj = targetVertex === 'b' ? sideAc : sideAb;
+        const otherCorner = targetVertex === 'b' ? 'c' : 'b';
+        const otherAngleNum = targetFunc === 'sin' ? otherOpp : targetFunc === 'cos' ? otherAdj : otherOpp;
+        const otherAngleDen = targetFunc === 'sin' ? hyp : targetFunc === 'cos' ? hyp : otherAdj;
+
+        currentRatioQ = {
+          sideAc, sideAb, sidebc,
+          targetVertex, targetFunc,
+          opp, adj, hyp,
+          num, den,
+          otherCorner,
+          otherAngleNum, otherAngleDen,
+          hints: [
+            `Stand at corner <strong>${targetVertex}</strong>: <strong>o (Opposite) = ${opp}</strong>, <strong>a (Adjacent) = ${adj}</strong>, and <strong>h (Hypotenuse) = ${hyp}</strong>.`,
+            `Use <strong>${formulaLabel}</strong>: <span class="font-math">${targetFunc}(${targetVertex}) = <span class="frac"><span class="num">${topWord}</span><span class="den">${botWord}</span></span> = <span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span></span>`
+          ]
+        };
+
+        document.getElementById('ratioPrompt').innerHTML = `
+          In right triangle <strong>A-b-c</strong> (with right angle A = 90°), find <span class="font-math text-indigo-700">${targetFunc}(${targetVertex})</span> as a fraction:
+        `;
+        drawRatioTriangleSvg();
+      }
+
+      function revealNextRatioHint() {
+        if (!currentRatioQ || ratioHintsRevealed >= currentRatioQ.hints.length) return;
+        const idx = ratioHintsRevealed;
+        ratioHintsRevealed += 1;
+        document.getElementById('ratioHintCounter').textContent = `${ratioHintsRevealed}`;
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-950 animate-fade';
+        div.innerHTML = `<strong>Hint ${ratioHintsRevealed}:</strong> ${currentRatioQ.hints[idx]}`;
+        document.getElementById('ratioHintsList').appendChild(div);
+      }
+
+      function checkRatioAnswer() {
+        const uNum = parseFloat(document.getElementById('ratioInputNum').value);
+        const uDen = parseFloat(document.getElementById('ratioInputDen').value);
+        const fb = document.getElementById('ratioFeedback');
+
+        if (isNaN(uNum) || isNaN(uDen) || uDen === 0) {
+          fb.className = 'p-4 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-950 text-sm';
+          fb.innerHTML = '⚠️ Please enter both a <strong>Top (numerator)</strong> and a non-zero <strong>Bottom (denominator)</strong> number first!';
+          fb.classList.remove('hidden');
+          return;
+        }
+
+        const q = currentRatioQ;
+        const expectedRatio = q.num / q.den;
+        const userRatio = uNum / uDen;
+
+        if (Math.abs(userRatio - expectedRatio) < 0.0001) {
+          fb.className = 'p-4 rounded-xl border-2 border-emerald-400 bg-emerald-50 text-emerald-950 text-sm';
+          fb.innerHTML = `✅ <strong>Correct!</strong> <span class="font-math">${q.targetFunc}(${q.targetVertex}) = <span class="frac"><span class="num">${q.num}</span><span class="den">${q.den}</span></span></span>. Click <em>New Triangle</em> to practice another!`;
+          fb.classList.remove('hidden');
+          if (!ratioAnsweredCorrectly) {
+            ratioAnsweredCorrectly = true;
+            state.streak += 1;
+            state.solved += 1;
+            document.getElementById('practiceStreak').textContent = state.streak;
+            document.getElementById('practiceSolved').textContent = state.solved;
+          }
+          return;
+        }
+
+        state.streak = 0;
+        document.getElementById('practiceStreak').textContent = '0';
+        let reason = `Remember SOH-CAH-TOA: <strong>sin = o/h</strong>, <strong>cos = a/h</strong>, <strong>tan = o/a</strong>.`;
+
+        if (Math.abs(userRatio - (q.den / q.num)) < 0.0001) {
+          reason = `<strong>Upside-Down Fraction!</strong> You entered <span class="font-math"><span class="frac"><span class="num">${uNum}</span><span class="den">${uDen}</span></span></span>, which is flipped! Put the top part of SOH-CAH-TOA on top: <span class="font-math"><span class="frac"><span class="num">${q.num}</span><span class="den">${q.den}</span></span></span>.`;
+        } else if (Math.abs(userRatio - (q.otherAngleNum / q.otherAngleDen)) < 0.0001) {
+          reason = `<strong>Stood at the Wrong Corner!</strong> You found <span class="font-math">${q.targetFunc}(${q.otherCorner})</span> instead of <span class="font-math">${q.targetFunc}(${q.targetVertex})</span>! Stand at corner <strong>${q.targetVertex}</strong> so Opposite and Adjacent swap.`;
+        }
+
+        fb.className = 'p-4 rounded-xl border-2 border-rose-300 bg-rose-50 text-rose-950 text-sm';
+        fb.innerHTML = `❌ <strong>Not quite (<span class="font-math"><span class="frac"><span class="num">${uNum}</span><span class="den">${uDen}</span></span></span>).</strong> ${reason}`;
+        fb.classList.remove('hidden');
+      }
+
+      document.getElementById('btnToggleRatioLabels').addEventListener('click', () => {
+        showRatioOahLabels = !showRatioOahLabels;
+        const btn = document.getElementById('btnToggleRatioLabels');
+        if (showRatioOahLabels) {
+          btn.textContent = '🙈 Hide o, a, h Labels';
+          btn.className = 'px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer';
+        } else {
+          btn.textContent = '👁️ Show o, a, h Labels';
+          btn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer';
+        }
+        drawRatioTriangleSvg();
+      });
+      document.getElementById('btnCheckRatio').addEventListener('click', checkRatioAnswer);
+      document.getElementById('ratioInputNum').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkRatioAnswer();
+      });
+      document.getElementById('ratioInputDen').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkRatioAnswer();
+      });
+      document.getElementById('btnNextRatioHint').addEventListener('click', revealNextRatioHint);
+      document.getElementById('btnNextRatio').addEventListener('click', nextRatioQuestion);
+
+      let cbVisible = true;
+      document.getElementById('btnToggleCodeBreaker').addEventListener('click', () => {
+        cbVisible = !cbVisible;
+        document.getElementById('codeBreakerBody').classList.toggle('hidden', !cbVisible);
+        document.getElementById('btnToggleCodeBreaker').textContent = cbVisible ? 'Hide Puzzle ▲' : 'Show Puzzle ▼';
+      });
+
+      // ---------------------------------------------------------------------
+      // 6. BONUS MINI-GAME: CODE BREAKER (UNLOCK SECRET WORD "MATH")
+      // ---------------------------------------------------------------------
+      const codePuzzles = [
+        { id: 1, letter: 'M', ans: 19.2, desc: 'θ = 40°, H = 25, Find A (x)', svg: `<polygon points="35,115 165,115 165,30" fill="#eef2ff" stroke="#475569" stroke-width="2"/><text x="68" y="108" font-size="11" font-weight="800" fill="#4338ca">40°</text><text x="90" y="65" font-size="11" font-weight="800" fill="#6d28d9">25</text><text x="100" y="130" font-size="11" font-weight="800" fill="#1d4ed8">x</text>` },
+        { id: 2, letter: 'A', ans: 25.7, desc: 'θ = 35°, O = 18, Find A (x)', svg: `<polygon points="35,115 165,115 165,30" fill="#eef2ff" stroke="#475569" stroke-width="2"/><text x="68" y="108" font-size="11" font-weight="800" fill="#4338ca">35°</text><text x="172" y="78" font-size="11" font-weight="800" fill="#047857">18</text><text x="100" y="130" font-size="11" font-weight="800" fill="#1d4ed8">x</text>` },
+        { id: 3, letter: 'T', ans: 20.8, desc: 'θ = 32°, O = 11, Find H (x)', svg: `<polygon points="35,115 165,115 165,30" fill="#eef2ff" stroke="#475569" stroke-width="2"/><text x="68" y="108" font-size="11" font-weight="800" fill="#4338ca">32°</text><text x="172" y="78" font-size="11" font-weight="800" fill="#047857">11</text><text x="90" y="65" font-size="11" font-weight="800" fill="#6d28d9">x</text>` },
+        { id: 4, letter: 'H', ans: 31.9, desc: 'θ = 20°, A = 30, Find H (x)', svg: `<polygon points="35,115 165,115 165,30" fill="#eef2ff" stroke="#475569" stroke-width="2"/><text x="68" y="108" font-size="11" font-weight="800" fill="#4338ca">20°</text><text x="100" y="130" font-size="11" font-weight="800" fill="#1d4ed8">30</text><text x="90" y="65" font-size="11" font-weight="800" fill="#6d28d9">x</text>` }
+      ];
+
+      function initCodeBreaker() {
+        const grid = document.getElementById('codeBreakerCards');
+        grid.innerHTML = codePuzzles.map((p) => `
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-indigo-700">Triangle #${p.id}</span>
+              <span id="cb-letter-${p.id}" class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-math text-xs font-extrabold">Letter: ?</span>
+            </div>
+            <svg viewBox="0 0 210 140" class="w-full h-auto bg-white rounded-lg border border-slate-200">${p.svg}</svg>
+            <div class="text-[11px] font-semibold text-slate-600 text-center">${p.desc}</div>
+            <input type="number" step="any" id="cb-input-${p.id}" placeholder="x ≈ ?"
+              class="w-full px-3 py-2 rounded-lg border border-slate-300 font-math text-xs font-bold text-center bg-white" />
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('btnCheckCodeBreaker').addEventListener('click', () => {
+        let allCorrect = true;
+        codePuzzles.forEach((p) => {
+          const val = parseFloat(document.getElementById(`cb-input-${p.id}`).value);
+          const badge = document.getElementById(`cb-letter-${p.id}`);
+          if (!isNaN(val) && Math.abs(val - p.ans) <= 0.15) {
+            badge.textContent = `Letter: ${p.letter}`;
+            badge.className = 'px-2 py-0.5 rounded bg-emerald-600 text-white font-math text-xs font-extrabold';
+          } else {
+            allCorrect = false;
+            badge.textContent = 'Letter: ?';
+            badge.className = 'px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-math text-xs font-extrabold';
+          }
+        });
+
+        const res = document.getElementById('codeBreakerResult');
+        res.classList.remove('hidden');
+        if (allCorrect) {
+          res.className = 'p-4 rounded-xl border-2 border-emerald-400 bg-emerald-50 text-emerald-950 text-center font-extrabold text-base';
+          res.innerHTML = '🎉 Secret Word Unlocked: <span class="font-math text-indigo-700 tracking-widest text-xl">M A T H</span> — All 4 triangles solved!';
+        } else {
+          res.className = 'p-4 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-950 text-center font-bold text-xs sm:text-sm';
+          res.innerHTML = '⚠️ One or more triangles still need checking! Remember: x on TOP → Multiply; x on BOTTOM → Divide (DEG mode).';
+        }
+      });
+
+      // ---------------------------------------------------------------------
+      // INITIALIZE ALL TABS ON LOAD
+      // ---------------------------------------------------------------------
+      loadSolverPreset('kite');
+      updateElevGoalControls();
+      renderLearnSvg();
+      nextPracticeQuestion();
+      initCodeBreaker();
+    });
+  </script>
+</body>
+</html>
